@@ -25,6 +25,11 @@ namespace Flights.Domain.ValueObjects
             {
                 throw new DomainException("End of the flight must be later than start");
             }
+
+            if(startTime.Value.AddDays(3) < endTime)
+            {
+                throw new DomainException("Our plane can`t fly that long");
+            }
         }
     }
 }
