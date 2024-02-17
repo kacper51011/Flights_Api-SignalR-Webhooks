@@ -1,6 +1,10 @@
+using Flights.Application.Commands.CreateFlight;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+builder.Services.AddMediatR((m) => m.RegisterServicesFromAssemblyContaining(typeof(CreateFlightCommand)));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
