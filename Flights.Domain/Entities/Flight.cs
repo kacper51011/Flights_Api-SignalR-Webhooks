@@ -18,7 +18,7 @@ namespace Flights.Domain.Entities
         public StartTime StartTime { get; private set; }
         public EndTime EndTime { get; private set;}
 
-        public TimeSpan Duration { get; private set;}
+        public Duration Duration { get; private set;}
 
         public TimeSpan Delay { get; private set;}
 
