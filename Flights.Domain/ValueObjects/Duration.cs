@@ -11,12 +11,13 @@ namespace Flights.Domain.ValueObjects
             Value = result;
         }
 
-        public TimeSpan Validate(StartTime startTime, EndTime endTime)
+        private TimeSpan Validate(StartTime startTime, EndTime endTime)
         {
-            if (startTime.Value > endTime.Value)
-            {
-                throw new DomainException("End of the flight must be later than start");
-            }
+            // I think the more proper place for this validation would be in endTime value object, but ill leave it here
+            //if (startTime.Value > endTime.Value)
+            //{
+            //    throw new DomainException("End of the flight must be later than start");
+            //}
 
             return endTime.Value - startTime.Value;
 
