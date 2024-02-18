@@ -1,7 +1,6 @@
 ﻿using Flights.Application.Commands.CreateFlight;
 using Flights.Application.Dtos;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Flights_Api_SignalR_Webhooks.Controllers
@@ -10,6 +9,7 @@ namespace Flights_Api_SignalR_Webhooks.Controllers
     [ApiController]
     public class FlightsController : ControllerBase
     {
+        // Endpoints created with CQRS in mind
         private readonly IMediator _mediator;
         public FlightsController(IMediator mediator)
         {
@@ -17,11 +17,59 @@ namespace Flights_Api_SignalR_Webhooks.Controllers
         }
 
         [HttpPost]
+        [Route("CreateFlight")]
         public async Task<ActionResult<string>> CreateFlight(CreateFlightDtoRequest createFlightDtoRequest)
         {
-            var request = new CreateFlightCommand(createFlightDtoRequest);
-            var response = await _mediator.Send(request);
-            return Ok(response);
+            try
+            {
+                var request = new CreateFlightCommand(createFlightDtoRequest);
+                var response = await _mediator.Send(request);
+                return Ok(response);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
         }
+
+        [HttpPost]
+        [Route("Flights/{id}/IncrementDelay")]
+        public async Task<ActionResult> IncrementFlightDelay(string id, TimeSpan incrementDelayValue)
+        {
+            try
+            {
+                var request = new IncrementFlightDelayCommand(id, IncrementDelayValue);
+                var response = await _mediator.Send(request);
+                return Ok();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+        }
+
+        [HttpPost]
+        [Route("Flights/{id}/DecrementDelay")]
+        public async Task<ActionResult> DecrementFlightDelay(string id, TimeSpan decrementDelayValue)
+        {
+            try
+            {
+                var request = new DecrementFlightDelayCommand(id, decrementDelayValue);
+                var response = await _mediator.Send(request);
+                return Ok();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+        }
+
+
     }
 }
