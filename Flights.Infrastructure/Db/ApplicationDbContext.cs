@@ -1,4 +1,5 @@
 ﻿using Flights.Domain.Entities;
+using Flights.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -12,7 +13,8 @@ namespace Flights.Infrastructure.Db
 {
     public class ApplicationDbContext: DbContext
     {
-        DbSet<Flight> Flights { get; set; }
+        public DbSet<Flight> Flights { get; set; }
+        public DbSet<WebhookSubscription> WebhookSubscriptions { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options): base(options)
         {
             var dbCreator = Database.GetService<IDatabaseCreator>() as RelationalDatabaseCreator;

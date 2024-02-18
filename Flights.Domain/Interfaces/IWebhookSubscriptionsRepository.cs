@@ -9,7 +9,7 @@ namespace Flights.Domain.Interfaces
 {
     public interface IWebhookSubscriptionsRepository
     {
-        public Task<WebhookSubscription> GetSubscription(string subscriptionId);
+        public Task<WebhookSubscription> GetSubscriptionById(string subscriptionId);
         public Task<WebhookSubscription> GetSubscriptionByUri(string uri);
         public Task<List<WebhookSubscription>> GetAllSubscriptions();
         public Task AddSubscription(WebhookSubscription subscription);
