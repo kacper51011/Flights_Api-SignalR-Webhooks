@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  flights.api:
+    image: ${DOCKER_REGISTRY-}flightsapi
+    build:
+      context: .
+      dockerfile: Flights_Api-SignalR-Webhooks/Dockerfile
