@@ -1,7 +1,9 @@
 using Flights.Application.Commands.CreateFlight;
 using Flights.Domain.Interfaces;
+using Flights.Infrastructure.Db;
 using Flights.Infrastructure.Repositories;
 using MassTransit;
+using Microsoft.EntityFrameworkCore;
 using Quartz;
 using System.Reflection;
 
@@ -11,27 +13,49 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddMediatR((m) => m.RegisterServicesFromAssemblyContaining(typeof(CreateFlightCommand)));
 
+
+
+
 builder.Services.AddMassTransit(cfg =>
 {
+
+
+
     cfg.SetDefaultEndpointNameFormatter();
+
 
     cfg.UsingRabbitMq((context, configuration) =>
     {
 
-        configuration.Host(builder.Configuration["RabbitMQ:HostName"], "/", h =>
+        configuration.Host("rabbitmq", "/", h =>
         {
 
-            h.Username(builder.Configuration["RabbitMQ:UserName"]);
-            h.Password(builder.Configuration["RabbitMQ:Password"]);
+            h.Username("guest");
+            h.Password("guest");
         });
 
         configuration.ConfigureEndpoints(context);
     });
+
+
 });
 
 builder.Services.AddQuartz(c =>
 {
 
+});
+
+var dbSettings = builder.Configuration.GetSection("Db");
+
+var port = dbSettings["Port"];
+var server = dbSettings["Server"];
+var user = dbSettings["User"];
+var database = dbSettings["Database"];
+var password = dbSettings["Password"];
+
+builder.Services.AddDbContext<ApplicationDbContext>(c =>
+{
+    c.UseSqlServer($"Data Source={server};Initial Catalog={database};User ID={user};Password={password}; TrustServerCertificate=True;Encrypt=True;MultiSubnetFailover=True;MultipleActiveResultSets=true", b => b.MigrationsAssembly("Flights.Api"));
 });
 
 builder.Services.AddTransient<IFlightsRepository, FlightsRepository>();
@@ -58,13 +82,13 @@ builder.Services.AddSwaggerGen(cfg =>
             Email = "kacper.tylec1999@gmail.com",
             Url = new Uri("https://github.com/kacper51011")
         },
-        Description = "<h3>Flights Api:<h3/>" +
-        "<h5>Created as a basic simulation of api which provides real-time changing data of flight plans.<br/>" +
+        Description =
+        "<h5>Created as a basic simulation of api which provides real-time changing data of flight plans." +
         "<h5>Created with purpose of learning how to use webhooks as a provider and consumer of them with other api" +
+        "<h5>The API revolves mainly around:</h5>" +
         "<ul>" +
-        "<li>Generate Random flights and manipulate the data through background jobs (quartz)</li>" +
-        "<li>Allows users to create their own flights </li>" +
-        "<li> </li>" +
+        "<li>Generating Random flights and manipulating the data through background jobs (quartz)</li>" +
+        "<li>Allowing users to create their own flights </li>" +
         " <ul/>" +
         ""
     });
