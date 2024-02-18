@@ -6,6 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <InvariantGlobalization>true</InvariantGlobalization>
     <RootNamespace>Flights_Api_SignalR_Webhooks</RootNamespace>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <DocumentationFile>Flights.Api.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
