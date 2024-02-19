@@ -4,11 +4,11 @@ namespace Flights.Domain.Entities
 {
     public class Flight : AggregateRoot
     {
-        private Flight(StartTime startTime, EndTime endTime, string from, string to)
+        private Flight(DateTime startTime, DateTime endTime, string from, string to)
         {
             FlightId = Guid.NewGuid().ToString();
-            StartTime = startTime;
-            EndTime = endTime;
+            StartTime = new StartTime(startTime);
+            EndTime = new EndTime(StartTime, endTime);
             From = from;
             To = to;
             Duration = new Duration(StartTime, EndTime);
@@ -33,8 +33,9 @@ namespace Flights.Domain.Entities
         public bool FlightCompleted { get; private set; }
 
 
-        public Flight Create(StartTime startTime, EndTime endTime, string from, string to)
+        public static Flight Create(DateTime startTime, DateTime endTime, string from, string to)
         {
+            
             var flight = new Flight(startTime, endTime, from, to);
             flight.InitializeRoot();
 
