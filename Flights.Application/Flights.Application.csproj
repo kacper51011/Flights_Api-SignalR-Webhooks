@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Commands\DecrementFlightDelay\" />
     <Folder Include="Queries\" />
   </ItemGroup>
 

@@ -13,6 +13,12 @@ namespace Flights.Application.Commands.IncrementFlightDelay
         private readonly IFlightsRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
 
+        public IncrementFlightDelayCommandHandler(IUnitOfWork unitOfWork, IFlightsRepository repository)
+        {
+            _unitOfWork = unitOfWork;
+            _repository = repository;
+        }
+
         public async Task Handle(IncrementFlightDelayCommand request, CancellationToken cancellationToken)
         {
             try
