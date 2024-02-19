@@ -1,6 +1,7 @@
 ﻿using Flights.Domain.Entities;
 using Flights.Domain.Interfaces;
 using Flights.Infrastructure.Db;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,34 +18,38 @@ namespace Flights.Infrastructure.Repositories
         {
             _context = context;
         }
-        public Task AddFlight(Flight flight)
+        public async Task AddFlight(Flight flight)
         {
-            throw new NotImplementedException();
+            await _context.Flights.AddAsync(flight);
         }
 
-        public Task DeleteFlight(Flight flight)
+        public void DeleteFlight(Flight flight)
         {
-            throw new NotImplementedException();
+            _context.Flights.Remove(flight);
         }
 
-        public Task<List<Flight>> GetAllFlights()
+        public async Task<List<Flight>> GetAllFlights()
         {
-            throw new NotImplementedException();
+            var response = await _context.Flights.ToListAsync();
+            return response;
         }
 
-        public Task<List<Flight>> GetCompletedFlights()
+        public async Task<List<Flight>> GetCompletedFlights()
         {
-            throw new NotImplementedException();
+            var response = await _context.Flights.Where(x => x.FlightCompleted == true).ToListAsync();
+            return response;
         }
 
-        public Task<Flight> GetFlightById(string flightId)
+        public async Task<Flight> GetFlightById(string flightId)
         {
-            throw new NotImplementedException();
+            var response = await _context.Flights.FirstOrDefaultAsync(x => x.FlightId == flightId);
+            return response;
         }
 
-        public Task<List<Flight>> GetStartedFlights()
+        public async Task<List<Flight>> GetStartedFlights()
         {
-            throw new NotImplementedException();
+            var response = await _context.Flights.Where(x => x.FlightStarted == true).ToListAsync();
+            return response;
         }
     }
 }

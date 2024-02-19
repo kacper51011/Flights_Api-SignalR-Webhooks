@@ -15,7 +15,7 @@ namespace Flights.Domain.Interfaces
         public Task<List<Flight>> GetAllFlights();
 
         public Task AddFlight(Flight flight);
-        public Task DeleteFlight(Flight flight);
+        public void DeleteFlight(Flight flight);
 
 
     }
