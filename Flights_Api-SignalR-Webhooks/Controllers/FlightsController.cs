@@ -1,4 +1,6 @@
 ﻿using Flights.Application.Commands.CreateFlight;
+using Flights.Application.Commands.DecrementFlightDelay;
+using Flights.Application.Commands.IncrementFlightDelay;
 using Flights.Application.Dtos;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -28,7 +30,6 @@ namespace Flights_Api_SignalR_Webhooks.Controllers
             }
             catch (Exception)
             {
-
                 throw;
             }
 
@@ -40,14 +41,14 @@ namespace Flights_Api_SignalR_Webhooks.Controllers
         {
             try
             {
-                var request = new IncrementFlightDelayCommand(id, IncrementDelayValue);
-                var response = await _mediator.Send(request);
+                var request = new IncrementFlightDelayCommand(id, incrementDelayValue);
+                await _mediator.Send(request);
                 return Ok();
             }
             catch (Exception)
             {
 
-                throw;
+                return StatusCode(500);
             }
 
         }
@@ -59,13 +60,13 @@ namespace Flights_Api_SignalR_Webhooks.Controllers
             try
             {
                 var request = new DecrementFlightDelayCommand(id, decrementDelayValue);
-                var response = await _mediator.Send(request);
+                await _mediator.Send(request);
                 return Ok();
             }
             catch (Exception)
             {
 
-                throw;
+                return StatusCode(500);
             }
 
         }
