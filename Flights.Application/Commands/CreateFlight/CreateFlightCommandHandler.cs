@@ -1,8 +1,6 @@
-﻿using Flights.Application.Messages;
-using Flights.Domain.Entities;
+﻿using Flights.Domain.Entities;
 using Flights.Domain.Interfaces;
 using Flights.Domain.ValueObjects;
-using MassTransit;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -14,11 +12,13 @@ namespace Flights.Application.Commands.CreateFlight
 {
     public class CreateFlightCommandHandler : IRequestHandler<CreateFlightCommand, string>
     {
-        private readonly IPublishEndpoint _publishEndpoint;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IFlightsRepository _flightsRepository;
 
-        public CreateFlightCommandHandler( IPublishEndpoint publishEndpoint)
+        public CreateFlightCommandHandler(IUnitOfWork unitOfWork, IFlightsRepository flightsRepository)
         {
-            _publishEndpoint = publishEndpoint;
+            _unitOfWork = unitOfWork;
+            _flightsRepository = flightsRepository;
             
         }
         public async Task<string> Handle(CreateFlightCommand request, CancellationToken cancellationToken)
@@ -26,15 +26,10 @@ namespace Flights.Application.Commands.CreateFlight
             //there can be 2 flights to the same place at the same time so i won`t check do flight already exist
             try
             {
-                //must be used to check if values are correct, also it provides ID later which helps to navigate through flight for update purposes
+
                 var flight = Flight.Create(request.dto.StartTime, request.dto.EndTime, request.dto.From, request.dto.To);
-
-                var message = new FlightCreated()
-                {
-
-                };
-
-                await _publishEndpoint.Publish(new FlightCreated { });
+                await _flightsRepository.AddFlight(flight);
+                await _unitOfWork.SaveChangesAsync();
 
                 return flight.FlightId;
             }
