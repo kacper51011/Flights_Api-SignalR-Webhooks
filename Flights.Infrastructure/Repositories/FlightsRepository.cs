@@ -51,5 +51,10 @@ namespace Flights.Infrastructure.Repositories
             var response = await _context.Flights.Where(x => x.FlightStarted == true).ToListAsync();
             return response;
         }
+        public async Task<List<Flight>> GetNotSendedFlights()
+        {
+            var response = await _context.Flights.Where(x => x.IsSendToQueue == false).ToListAsync();
+            return response;
+        }
     }
 }

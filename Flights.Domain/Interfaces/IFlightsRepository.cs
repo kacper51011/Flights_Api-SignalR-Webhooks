@@ -13,6 +13,7 @@ namespace Flights.Domain.Interfaces
         public Task<List<Flight>> GetCompletedFlights();
         public Task<List<Flight>> GetStartedFlights();
         public Task<List<Flight>> GetAllFlights();
+        public Task<List<Flight>> GetNotSendedFlights();
 
         public Task AddFlight(Flight flight);
         public void DeleteFlight(Flight flight);

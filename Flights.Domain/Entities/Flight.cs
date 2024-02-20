@@ -15,6 +15,9 @@ namespace Flights.Domain.Entities
             Delay = TimeSpan.Zero;
             FlightStarted = false;
             FlightCompleted = false;
+            IsSendToQueue = false;
+
+
 
         }
 
@@ -29,6 +32,7 @@ namespace Flights.Domain.Entities
             Delay = TimeSpan.Zero;
             FlightStarted = false;
             FlightCompleted = false;
+            IsSendToQueue = false;
 
         }
         public string FlightId { get; private set; }
@@ -45,6 +49,8 @@ namespace Flights.Domain.Entities
         public bool FlightStarted { get; private set; }
 
         public bool FlightCompleted { get; private set; }
+
+        public bool IsSendToQueue {  get; private set; }
 
         public static Flight Create(DateTime startTime, DateTime endTime, string from, string to)
         {
@@ -66,18 +72,24 @@ namespace Flights.Domain.Entities
         {
             FlightStarted = true;
             IncrementVersion();
+            IsSendToQueue = false;
+
         }
         public void SetFlightCompleted()
         {
 
             FlightCompleted = true;
             IncrementVersion() ;
+            IsSendToQueue = false;
+
 
         }
         public void IncrementDelay(TimeSpan delayIncrementedByValue)
         {
             Delay += delayIncrementedByValue;
             IncrementVersion();
+            IsSendToQueue = false;
+
         }
         public void DecrementDelay(TimeSpan delayDecrementedByValue)
         {
@@ -89,6 +101,8 @@ namespace Flights.Domain.Entities
             }
             Delay -= delayDecrementedByValue;
             IncrementVersion();
+            IsSendToQueue = false;
+
         }
 
     }
