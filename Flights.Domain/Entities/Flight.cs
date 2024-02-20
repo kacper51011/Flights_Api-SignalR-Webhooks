@@ -17,6 +17,20 @@ namespace Flights.Domain.Entities
             FlightCompleted = false;
 
         }
+
+        private Flight(string id, DateTime startTime, DateTime endTime, string from, string to)
+        {
+            FlightId = id;
+            StartTime = new StartTime(startTime);
+            EndTime = new EndTime(StartTime, endTime);
+            From = from;
+            To = to;
+            Duration = new Duration(StartTime, EndTime);
+            Delay = TimeSpan.Zero;
+            FlightStarted = false;
+            FlightCompleted = false;
+
+        }
         public string FlightId { get; private set; }
         public StartTime StartTime { get; private set; }
         public EndTime EndTime { get; private set; }
@@ -32,11 +46,18 @@ namespace Flights.Domain.Entities
 
         public bool FlightCompleted { get; private set; }
 
-
         public static Flight Create(DateTime startTime, DateTime endTime, string from, string to)
         {
             
             var flight = new Flight(startTime, endTime, from, to);
+            flight.InitializeRoot();
+
+            return flight;
+        }
+
+        public static Flight CreateWithInitializedId(string id, DateTime startTime, DateTime endTime, string from, string to)
+        {
+            var flight = new Flight(id, startTime, endTime, from, to);
             flight.InitializeRoot();
 
             return flight;
