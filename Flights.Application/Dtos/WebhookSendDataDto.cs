@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Flights.Application.Dtos
 {
-    public class SendWebhookDto
+    public class WebhookSendDataDto
     {
         public string FlightId { get; set; }
         public DateTime StartTime { get; set; }

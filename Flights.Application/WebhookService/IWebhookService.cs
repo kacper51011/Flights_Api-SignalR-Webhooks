@@ -9,6 +9,6 @@ namespace Flights.Application.WebhookService
 {
     public interface IWebhookService
     {
-        public Task NotifyAsync(string url, SendWebhookDto dto);
+        public Task NotifyAsync(string url, WebhookSendDataDto dto);
     }
 }

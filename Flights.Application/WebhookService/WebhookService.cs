@@ -26,7 +26,7 @@ namespace Flights.Application.WebhookService
             _httpClient.Timeout = new TimeSpan(0, 0, 30);
 
         }
-        public async Task NotifyAsync(string url, SendWebhookDto dto)
+        public async Task NotifyAsync(string url, WebhookSendDataDto dto)
         {
             var serializedObject = JsonSerializer.Serialize(dto, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase});
 
