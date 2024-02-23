@@ -25,5 +25,7 @@ namespace Flights.Application.Dtos
         public bool FlightCompleted { get; set; }
 
         public string Secret { get; set; }
+
+        public DateTime DateOfUpdate {  get; set; }
     }
 }

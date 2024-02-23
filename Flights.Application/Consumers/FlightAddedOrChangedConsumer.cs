@@ -40,6 +40,7 @@ namespace Flights.Application.Consumers
                     EndTime = flight.EndTime.Value,
                     Duration = flight.Duration.Value,
                     Delay = flight.Delay,
+                    DateOfUpdate = flight.UpdatedAt
 
                 };
 

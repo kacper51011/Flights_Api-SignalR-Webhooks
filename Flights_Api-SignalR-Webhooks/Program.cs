@@ -1,4 +1,6 @@
+using Flights.Application.BackgroundJobs;
 using Flights.Application.Commands.CreateFlight;
+using Flights.Application.Consumers;
 using Flights.Domain.Interfaces;
 using Flights.Infrastructure.Db;
 using Flights.Infrastructure.Repositories;
@@ -19,7 +21,7 @@ builder.Services.AddMediatR((m) => m.RegisterServicesFromAssemblyContaining(type
 builder.Services.AddMassTransit(cfg =>
 {
 
-
+    cfg.AddConsumer<FlightAddedOrChangedConsumer>();
 
     cfg.SetDefaultEndpointNameFormatter();
 
@@ -42,7 +44,14 @@ builder.Services.AddMassTransit(cfg =>
 
 builder.Services.AddQuartz(c =>
 {
+    var SendWebhookJobKey = JobKey.Create(nameof(SendWebhooksJob));
 
+    c
+    .AddJob<SendWebhooksJob>(SendWebhookJobKey)
+    .AddTrigger(trigger =>
+    {
+        trigger.ForJob(SendWebhookJobKey).WithSimpleSchedule(schedule => schedule.WithIntervalInMinutes(1).RepeatForever());
+    });
 });
 
 var dbSettings = builder.Configuration.GetSection("Db");
