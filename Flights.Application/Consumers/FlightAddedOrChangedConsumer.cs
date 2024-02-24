@@ -36,9 +36,9 @@ namespace Flights.Application.Consumers
                     FlightStarted = flight.FlightStarted,
                     From = flight.From,
                     To = flight.To,
-                    StartTime = flight.StartTime.Value,
-                    EndTime = flight.EndTime.Value,
-                    Duration = flight.Duration.Value,
+                    StartTime = flight.StartTime,
+                    EndTime = flight.EndTime,
+                    Duration = flight.Duration,
                     Delay = flight.Delay,
                     DateOfUpdate = flight.UpdatedAt
 

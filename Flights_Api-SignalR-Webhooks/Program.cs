@@ -1,6 +1,7 @@
 using Flights.Application.BackgroundJobs;
 using Flights.Application.Commands.CreateFlight;
 using Flights.Application.Consumers;
+using Flights.Application.WebhookService;
 using Flights.Domain.Interfaces;
 using Flights.Infrastructure.Db;
 using Flights.Infrastructure.Repositories;
@@ -21,9 +22,11 @@ builder.Services.AddMediatR((m) => m.RegisterServicesFromAssemblyContaining(type
 builder.Services.AddMassTransit(cfg =>
 {
 
-    cfg.AddConsumer<FlightAddedOrChangedConsumer>();
 
     cfg.SetDefaultEndpointNameFormatter();
+
+    cfg.AddConsumer<FlightAddedOrChangedConsumer>();
+
 
 
     cfg.UsingRabbitMq((context, configuration) =>
@@ -56,11 +59,11 @@ builder.Services.AddQuartz(c =>
 
 var dbSettings = builder.Configuration.GetSection("Db");
 
-var port = dbSettings["Port"];
-var server = dbSettings["Server"];
-var user = dbSettings["User"];
-var database = dbSettings["Database"];
-var password = dbSettings["Password"];
+var port = "1433";
+var server = "flightsdb";
+var user = "SA";
+var database = "flights";
+var password = "RandomPassword123";
 
 builder.Services.AddDbContext<ApplicationDbContext>(c =>
 {
@@ -70,6 +73,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(c =>
 builder.Services.AddTransient<IFlightsRepository, FlightsRepository>();
 builder.Services.AddTransient<IWebhookSubscriptionsRepository, WebhookSubscriptionsRepository>();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
+
+builder.Services.AddTransient<IWebhookService, WebhookService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

@@ -1,4 +1,4 @@
-﻿using Flights.Domain.ValueObjects;
+﻿using Flights.Domain.Exceptions;
 
 namespace Flights.Domain.Entities
 {
@@ -7,11 +7,11 @@ namespace Flights.Domain.Entities
         private Flight(DateTime startTime, DateTime endTime, string from, string to)
         {
             FlightId = Guid.NewGuid().ToString();
-            StartTime = new StartTime(startTime);
-            EndTime = new EndTime(StartTime, endTime);
+            StartTime = startTime;
+            EndTime = endTime;
             From = from;
             To = to;
-            Duration = new Duration(StartTime, EndTime);
+            Duration = endTime - startTime;
             Delay = TimeSpan.Zero;
             FlightStarted = false;
             FlightCompleted = false;
@@ -23,12 +23,14 @@ namespace Flights.Domain.Entities
 
         private Flight(string id, DateTime startTime, DateTime endTime, string from, string to)
         {
+
+
             FlightId = id;
-            StartTime = new StartTime(startTime);
-            EndTime = new EndTime(StartTime, endTime);
+            StartTime = startTime;
+            EndTime = endTime;
             From = from;
             To = to;
-            Duration = new Duration(StartTime, EndTime);
+            Duration = endTime - startTime;
             Delay = TimeSpan.Zero;
             FlightStarted = false;
             FlightCompleted = false;
@@ -36,10 +38,10 @@ namespace Flights.Domain.Entities
 
         }
         public string FlightId { get; private set; }
-        public StartTime StartTime { get; private set; }
-        public EndTime EndTime { get; private set; }
+        public DateTime StartTime { get; private set; }
+        public DateTime EndTime { get; private set; }
 
-        public Duration Duration { get; private set; }
+        public TimeSpan Duration { get; private set; }
 
         public TimeSpan Delay { get; private set; }
 
@@ -54,6 +56,7 @@ namespace Flights.Domain.Entities
 
         public static Flight Create(DateTime startTime, DateTime endTime, string from, string to)
         {
+
             
             var flight = new Flight(startTime, endTime, from, to);
             flight.InitializeRoot();
@@ -103,6 +106,28 @@ namespace Flights.Domain.Entities
             IncrementVersion();
             IsSendToQueue = false;
 
+        }
+
+        public void Validate(DateTime startTime, DateTime endTime, string from, string to)
+        {          
+            //Due to the limitations of Entity Framework Core, I had to give up validation in valuable objects
+            if (endTime < startTime)
+            {
+                throw new DomainException("End of the flight must be later than start");
+            }
+
+            if (startTime.AddDays(3) < endTime)
+            {
+                throw new DomainException("Our plane can`t fly that long");
+            }
+            if (startTime < DateTime.UtcNow)
+            {
+                throw new DomainException("Can`t add Flight which already started");
+            }
+            if (String.Equals(from, to, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new DomainException("Can`t create flight with the same destination");
+            }
         }
 
     }

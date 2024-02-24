@@ -26,7 +26,7 @@ namespace Flights.Infrastructure.Repositories
 
         public async Task<List<WebhookSubscription>> GetAllSubscriptions()
         {
-            var response = await _context.WebhookSubscriptions.ToListAsync();
+            var response = await _context.WebhookSubscriptions.DefaultIfEmpty(null).ToListAsync();
             return response;
         }
 

@@ -1,6 +1,5 @@
 ﻿using Flights.Domain.Entities;
 using Flights.Domain.Interfaces;
-using Flights.Domain.ValueObjects;
 using MediatR;
 using System;
 using System.Collections.Generic;

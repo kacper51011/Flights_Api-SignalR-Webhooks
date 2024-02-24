@@ -13,6 +13,12 @@ namespace Flights.Application.Commands.CreateSubscription
     public class CreateSubscriptionCommandHandler : IRequestHandler<CreateSubscriptionCommand, string>
     {
         private readonly IWebhookSubscriptionsRepository _webhookSubscriptionsRepository;
+
+        public CreateSubscriptionCommandHandler(IWebhookSubscriptionsRepository webhookSubscriptionsRepository)
+        {
+            _webhookSubscriptionsRepository = webhookSubscriptionsRepository;
+            
+        }
         public async Task<string> Handle(CreateSubscriptionCommand request, CancellationToken cancellationToken)
         {
             try
