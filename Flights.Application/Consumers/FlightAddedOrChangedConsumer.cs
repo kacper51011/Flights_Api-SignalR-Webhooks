@@ -3,6 +3,7 @@ using Flights.Application.Messages;
 using Flights.Application.WebhookService;
 using Flights.Domain.Interfaces;
 using MassTransit;
+using Microsoft.Extensions.Logging;
 
 namespace Flights.Application.Consumers
 {
@@ -11,12 +12,14 @@ namespace Flights.Application.Consumers
         private readonly IWebhookService _webhookService;
         private readonly IFlightsRepository _flightRepository;
         private readonly IWebhookSubscriptionsRepository _webhookSubscriptionsRepository;
+        private readonly ILogger<FlightAddedOrChangedConsumer> _logger;
 
-        public FlightAddedOrChangedConsumer(IWebhookService webhookService, IFlightsRepository flightRepository, IWebhookSubscriptionsRepository webhookSubscriptionsRepository)
+        public FlightAddedOrChangedConsumer(ILogger<FlightAddedOrChangedConsumer> logger, IWebhookService webhookService, IFlightsRepository flightRepository, IWebhookSubscriptionsRepository webhookSubscriptionsRepository)
         {
             _webhookService = webhookService;
             _flightRepository = flightRepository;
             _webhookSubscriptionsRepository = webhookSubscriptionsRepository;
+            _logger = logger;
 
         }
         public async Task Consume(ConsumeContext<FlightAddedOrChanged> context)
@@ -26,6 +29,7 @@ namespace Flights.Application.Consumers
                 var flight = await _flightRepository.GetFlightById(context.Message.FlightId);
                 if (flight == null)
                 {
+                    _logger.LogWarning($"Couldn`t find flight with Id {context.Message.FlightId}");
                     return;
                 }
 
@@ -50,12 +54,14 @@ namespace Flights.Application.Consumers
                 {
                     dtoToSend.Secret = subscriber.Secret;
                     await _webhookService.NotifyAsync(subscriber.WebhookUri, dtoToSend);
+                    _logger.LogInformation($"Webhook sent to: {subscriber.WebhookUri}");
                 };
+
             }
             catch (Exception)
             {
 
-                throw;
+                _logger.LogWarning($"Something went wrong in FlightAddedConsumer with  FlightId: {context.Message.FlightId}");
             }
 
 

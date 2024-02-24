@@ -1,4 +1,5 @@
 ﻿using Flights.Application.Dtos;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,12 +15,14 @@ namespace Flights.Application.WebhookService
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly HttpClient _httpClient;
+        private readonly ILogger<WebhookService> _logger;
 
         // Im actually not sure about the way of handling the httpclient connection in this service, the main reason is
         // if we would want to initialize the httpclient in notify async, we would do a instance per call, which is not really a good idea
         // my way of thinking about this problem is that we would create this service as transient,
-        public WebhookService(IHttpClientFactory httpClientFactory)
+        public WebhookService(IHttpClientFactory httpClientFactory, ILogger<WebhookService> logger)
         {
+            _logger = logger;
 
             _httpClientFactory = httpClientFactory;
             _httpClient = _httpClientFactory.CreateClient();
@@ -28,14 +31,26 @@ namespace Flights.Application.WebhookService
         }
         public async Task NotifyAsync(string url, WebhookSendDataDto dto)
         {
-            var serializedObject = JsonSerializer.Serialize(dto, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase});
+            try
+            {
+                var serializedObject = JsonSerializer.Serialize(dto, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase});
 
-            var request = new HttpRequestMessage(HttpMethod.Post, url);
+                var request = new HttpRequestMessage(HttpMethod.Post, url);
 
-            request.Content =  new StringContent(serializedObject);
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                request.Content =  new StringContent(serializedObject);
+                request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
-            await _httpClient.SendAsync(request);
+                await _httpClient.SendAsync(request);
+
+                return;
+            }
+            catch (Exception)
+            {
+
+                _logger.LogWarning($"Something went wrong in WebhookService for subscribtion with url {url}");
+                return;
+            }
+
 
 
         }

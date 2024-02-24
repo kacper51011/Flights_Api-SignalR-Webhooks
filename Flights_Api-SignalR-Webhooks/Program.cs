@@ -13,11 +13,63 @@ using System.Reflection;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddTransient<IFlightsRepository, FlightsRepository>();
+builder.Services.AddTransient<IWebhookSubscriptionsRepository, WebhookSubscriptionsRepository>();
+builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
+
+builder.Services.AddTransient<IWebhookService, WebhookService>();
+
 
 builder.Services.AddMediatR((m) => m.RegisterServicesFromAssemblyContaining(typeof(CreateFlightCommand)));
 
 
+//builder.Services.AddQuartz(c =>
+//{
+//    //c.ScheduleJob<SendWebhooksJob>(trigger =>
+//    //{
+//    //    trigger.WithSimpleSchedule(x => x.WithIntervalInSeconds(30));
+//    //});
 
+//    c.ScheduleJob<TestJob>(trigger =>
+//    {
+//        trigger.WithSimpleSchedule(x => x.WithIntervalInSeconds(30));
+//    });
+//    //var SendWebhookJobKey = JobKey.Create(nameof(SendWebhooksJob));
+
+//    //c
+//    //.AddJob<SendWebhooksJob>(SendWebhookJobKey)
+//    //.AddTrigger(trigger =>
+//    //    trigger.WithIdentity("webhook trigger").ForJob(SendWebhookJobKey)
+//    //    .WithSimpleSchedule(schedule => schedule.WithInterval(TimeSpan.FromSeconds(30)).RepeatForever())
+//    //    );
+//});
+
+////builder.Services.AddQuartzHostedService(options =>
+////{
+////    // when shutting down we want jobs to complete gracefully
+////    options.WaitForJobsToComplete = true;
+////});
+///
+
+builder.Services.AddQuartz(config =>
+{
+    var testJobKey = new JobKey(nameof(WebhookJob));
+
+    config
+    .AddJob<WebhookJob>(testJobKey)
+    .AddTrigger(trigger =>
+        trigger.WithIdentity("webhook trigger").ForJob(testJobKey)
+        .WithSimpleSchedule(schedule => schedule.WithInterval(TimeSpan.FromSeconds(30)).RepeatForever())
+        );
+});
+
+
+
+builder.Services.AddQuartzHostedService(options =>
+{
+    // when shutting down we want jobs to complete gracefully
+    options.WaitForJobsToComplete = true;
+});
 
 builder.Services.AddMassTransit(cfg =>
 {
@@ -45,21 +97,7 @@ builder.Services.AddMassTransit(cfg =>
 
 });
 
-builder.Services.AddQuartz(c =>
-{
-    var SendWebhookJobKey = JobKey.Create(nameof(SendWebhooksJob));
 
-    c
-    .AddJob<SendWebhooksJob>(SendWebhookJobKey)
-    .AddTrigger(trigger =>
-    {
-        trigger.ForJob(SendWebhookJobKey).WithSimpleSchedule(schedule => schedule.WithIntervalInMinutes(1).RepeatForever());
-    });
-});
-
-var dbSettings = builder.Configuration.GetSection("Db");
-
-var port = "1433";
 var server = "flightsdb";
 var user = "SA";
 var database = "flights";
@@ -70,15 +108,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(c =>
     c.UseSqlServer($"Data Source={server};Initial Catalog={database};User ID={user};Password={password}; TrustServerCertificate=True;Encrypt=True;MultiSubnetFailover=True;MultipleActiveResultSets=true", b => b.MigrationsAssembly("Flights.Api"));
 });
 
-builder.Services.AddTransient<IFlightsRepository, FlightsRepository>();
-builder.Services.AddTransient<IWebhookSubscriptionsRepository, WebhookSubscriptionsRepository>();
-builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 
-builder.Services.AddTransient<IWebhookService, WebhookService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen(cfg =>
 {
     var commentFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
