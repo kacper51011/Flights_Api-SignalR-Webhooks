@@ -15,6 +15,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FlightsApi", "FlightsApi", 
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{E52CCF56-FBBB-4329-B5C7-A19DEB974D93}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FlightsExternalConsumerApi", "FlightsExternalConsumerApi", "{4EAE9104-1BF1-4745-A3BF-290D91A6B194}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlightsConsumer.Api", "FlightsConsumer.Api\FlightsConsumer.Api.csproj", "{75E85828-60A3-40D3-92C2-63FB88682CDE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +45,10 @@ Global
 		{E52CCF56-FBBB-4329-B5C7-A19DEB974D93}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E52CCF56-FBBB-4329-B5C7-A19DEB974D93}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E52CCF56-FBBB-4329-B5C7-A19DEB974D93}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75E85828-60A3-40D3-92C2-63FB88682CDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75E85828-60A3-40D3-92C2-63FB88682CDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75E85828-60A3-40D3-92C2-63FB88682CDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75E85828-60A3-40D3-92C2-63FB88682CDE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -50,6 +58,7 @@ Global
 		{D849DD03-4455-4CC8-8787-564455BE0F30} = {8A8D1C18-3EFA-42EE-999D-B79BCFC37BB5}
 		{CB1DB834-3C9F-475D-8DFD-99D47058D644} = {8A8D1C18-3EFA-42EE-999D-B79BCFC37BB5}
 		{5A1477A3-D0E4-4513-AEA6-5A7C703632C2} = {8A8D1C18-3EFA-42EE-999D-B79BCFC37BB5}
+		{75E85828-60A3-40D3-92C2-63FB88682CDE} = {4EAE9104-1BF1-4745-A3BF-290D91A6B194}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DEA003AC-0D8E-4EC5-A873-784DC6B607FA}
