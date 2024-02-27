@@ -13,6 +13,18 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Flights.Domain", "Flights\F
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Flights.Infrastructure", "Flights\Flights.Infrastructure\Flights.Infrastructure.csproj", "{A9CA743B-F957-4A10-9078-03E1972D7697}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Flights", "Flights", "{E571725C-3BF1-4C38-80BB-542C31B31BC4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlightsConsumer.Api", "FlightsExternalConsumer\FlightsConsumer.Api\FlightsConsumer.Api.csproj", "{03E68862-D105-45AB-9976-D6BBF9E5B509}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlightsConsumer.Application", "FlightsExternalConsumer\FlightsConsumer.Application\FlightsConsumer.Application.csproj", "{9BEC5621-C821-4D58-8242-0887CC4C7E9B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlightsConsumer.Domain", "FlightsExternalConsumer\FlightsConsumer.Domain\FlightsConsumer.Domain.csproj", "{11F107CF-EAAF-482A-B072-A63F31583F7E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlightsConsumer.Infrastructure", "FlightsExternalConsumer\FlightsConsumer.Infrastructure\FlightsConsumer.Infrastructure.csproj", "{7AE6A5AB-F9EA-4CA2-B061-85A22C07E108}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FlightsExternalConsumer", "FlightsExternalConsumer", "{CC47990D-9F7D-42F8-9D4E-E4C012908A8F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,9 +51,35 @@ Global
 		{A9CA743B-F957-4A10-9078-03E1972D7697}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A9CA743B-F957-4A10-9078-03E1972D7697}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A9CA743B-F957-4A10-9078-03E1972D7697}.Release|Any CPU.Build.0 = Release|Any CPU
+		{03E68862-D105-45AB-9976-D6BBF9E5B509}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03E68862-D105-45AB-9976-D6BBF9E5B509}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03E68862-D105-45AB-9976-D6BBF9E5B509}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03E68862-D105-45AB-9976-D6BBF9E5B509}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9BEC5621-C821-4D58-8242-0887CC4C7E9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BEC5621-C821-4D58-8242-0887CC4C7E9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BEC5621-C821-4D58-8242-0887CC4C7E9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BEC5621-C821-4D58-8242-0887CC4C7E9B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11F107CF-EAAF-482A-B072-A63F31583F7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11F107CF-EAAF-482A-B072-A63F31583F7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11F107CF-EAAF-482A-B072-A63F31583F7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11F107CF-EAAF-482A-B072-A63F31583F7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7AE6A5AB-F9EA-4CA2-B061-85A22C07E108}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7AE6A5AB-F9EA-4CA2-B061-85A22C07E108}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7AE6A5AB-F9EA-4CA2-B061-85A22C07E108}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7AE6A5AB-F9EA-4CA2-B061-85A22C07E108}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{EB86390D-3111-447B-AE3A-BD76B6479959} = {E571725C-3BF1-4C38-80BB-542C31B31BC4}
+		{13A47E7A-2061-4E57-BFFB-4582D629AD57} = {E571725C-3BF1-4C38-80BB-542C31B31BC4}
+		{1DEC1E74-7A98-4A1A-B0C6-E8036E3A7A49} = {E571725C-3BF1-4C38-80BB-542C31B31BC4}
+		{A9CA743B-F957-4A10-9078-03E1972D7697} = {E571725C-3BF1-4C38-80BB-542C31B31BC4}
+		{03E68862-D105-45AB-9976-D6BBF9E5B509} = {CC47990D-9F7D-42F8-9D4E-E4C012908A8F}
+		{9BEC5621-C821-4D58-8242-0887CC4C7E9B} = {CC47990D-9F7D-42F8-9D4E-E4C012908A8F}
+		{11F107CF-EAAF-482A-B072-A63F31583F7E} = {CC47990D-9F7D-42F8-9D4E-E4C012908A8F}
+		{7AE6A5AB-F9EA-4CA2-B061-85A22C07E108} = {CC47990D-9F7D-42F8-9D4E-E4C012908A8F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DEA003AC-0D8E-4EC5-A873-784DC6B607FA}

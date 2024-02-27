@@ -1,4 +1,4 @@
-﻿using Flights.Domain.Exceptions;
+﻿using Flights.Domain.Validations;
 
 namespace Flights.Domain.Entities
 {
@@ -6,6 +6,7 @@ namespace Flights.Domain.Entities
     {
         private Flight(DateTime startTime, DateTime endTime, string from, string to)
         {
+            this.ValidateCreation(startTime, endTime, from, to);
             FlightId = Guid.NewGuid().ToString();
             StartTime = startTime;
             EndTime = endTime;
@@ -24,7 +25,7 @@ namespace Flights.Domain.Entities
         private Flight(string id, DateTime startTime, DateTime endTime, string from, string to)
         {
 
-
+            this.ValidateCreation(startTime, endTime, from, to);
             FlightId = id;
             StartTime = startTime;
             EndTime = endTime;
@@ -52,12 +53,11 @@ namespace Flights.Domain.Entities
 
         public bool FlightCompleted { get; private set; }
 
-        public bool IsSendToQueue {  get; private set; }
+        public bool IsSendToQueue { get; private set; }
 
         public static Flight Create(DateTime startTime, DateTime endTime, string from, string to)
         {
 
-            
             var flight = new Flight(startTime, endTime, from, to);
             flight.InitializeRoot();
 
@@ -82,13 +82,14 @@ namespace Flights.Domain.Entities
         {
 
             FlightCompleted = true;
-            IncrementVersion() ;
+            IncrementVersion();
             IsSendToQueue = false;
 
 
         }
         public void IncrementDelay(TimeSpan delayIncrementedByValue)
         {
+            this.ValidateIncrementDelay();
             Delay += delayIncrementedByValue;
             IncrementVersion();
             IsSendToQueue = false;
@@ -96,6 +97,7 @@ namespace Flights.Domain.Entities
         }
         public void DecrementDelay(TimeSpan delayDecrementedByValue)
         {
+            this.ValidateDecrementDelay(delayDecrementedByValue);
             if (Delay - delayDecrementedByValue <= TimeSpan.Zero)
             {
                 Delay = TimeSpan.Zero;
@@ -105,40 +107,6 @@ namespace Flights.Domain.Entities
             Delay -= delayDecrementedByValue;
             IncrementVersion();
             IsSendToQueue = false;
-
-        }
-
-        public void Validate(DateTime startTime, DateTime endTime, string from, string to)
-        {          
-            //Due to the limitations of Entity Framework Core, I had to give up validation in valuable objects
-            if (endTime < startTime)
-            {
-                throw new DomainException("End of the flight must be later than start");
-            }
-
-            if (startTime.AddDays(3) < endTime)
-            {
-                throw new DomainException("Our plane can`t fly that long");
-            }
-            if (startTime < DateTime.UtcNow)
-            {
-                throw new DomainException("Can`t add Flight which already started");
-            }
-            if (String.Equals(from, to, StringComparison.OrdinalIgnoreCase))
-            {
-                throw new DomainException("Can`t create flight with the same destination");
-            }
-        }
-
-        public void ValidateIncrementDelay(TimeSpan delayIncrementedByValue)
-        {
-            if (FlightCompleted)
-            {
-                throw new DomainException("Can`t increment of already completed flight");
-            }
-        }
-        public void ValidateDecrementDelay(TimeSpan delayDecrementedByValue)
-        {
 
         }
     }

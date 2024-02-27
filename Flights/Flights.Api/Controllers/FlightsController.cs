@@ -2,6 +2,7 @@
 using Flights.Application.Commands.DecrementFlightDelay;
 using Flights.Application.Commands.IncrementFlightDelay;
 using Flights.Application.Dtos;
+using Flights.Application.Queries.GetFlightById;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +17,23 @@ namespace Flights_Api_SignalR_Webhooks.Controllers
         public FlightsController(IMediator mediator)
         {
             _mediator = mediator;
+        }
+        [HttpGet]
+        [Route("{id}")]
+
+        public async Task<ActionResult<GetFlightResponseDto>> GetFlightById(string id)
+        {
+            try
+            {
+                var request = new GetFlightByIdQuery(id);
+                var response = await _mediator.Send(request);
+                return Ok(response);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         [HttpPost]
