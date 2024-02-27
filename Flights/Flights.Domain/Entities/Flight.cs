@@ -130,6 +130,17 @@ namespace Flights.Domain.Entities
             }
         }
 
+        public void ValidateIncrementDelay(TimeSpan delayIncrementedByValue)
+        {
+            if (FlightCompleted)
+            {
+                throw new DomainException("Can`t increment of already completed flight");
+            }
+        }
+        public void ValidateDecrementDelay(TimeSpan delayDecrementedByValue)
+        {
+
+        }
     }
 
 

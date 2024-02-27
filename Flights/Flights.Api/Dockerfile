@@ -9,13 +9,13 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["Flights_Api-SignalR-Webhooks/Flights.Api.csproj", "Flights_Api-SignalR-Webhooks/"]
-COPY ["Flights.Application/Flights.Application.csproj", "Flights.Application/"]
-COPY ["Flights.Domain/Flights.Domain.csproj", "Flights.Domain/"]
-COPY ["Flights.Infrastructure/Flights.Infrastructure.csproj", "Flights.Infrastructure/"]
-RUN dotnet restore "./Flights_Api-SignalR-Webhooks/./Flights.Api.csproj"
+COPY ["Flights/Flights.Api/Flights.Api.csproj", "Flights/Flights.Api/"]
+COPY ["Flights/Flights.Application/Flights.Application.csproj", "Flights/Flights.Application/"]
+COPY ["Flights/Flights.Domain/Flights.Domain.csproj", "Flights/Flights.Domain/"]
+COPY ["Flights/Flights.Infrastructure/Flights.Infrastructure.csproj", "Flights/Flights.Infrastructure/"]
+RUN dotnet restore "./Flights/Flights.Api/./Flights.Api.csproj"
 COPY . .
-WORKDIR "/src/Flights_Api-SignalR-Webhooks"
+WORKDIR "/src/Flights/Flights.Api"
 RUN dotnet build "./Flights.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
