@@ -1,3 +1,5 @@
+using FlightsConsumer.Application.Hubs;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -20,6 +22,7 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
+app.MapHub<FlightsHub>("/flightshub");
 app.MapControllers();
 
 app.Run();

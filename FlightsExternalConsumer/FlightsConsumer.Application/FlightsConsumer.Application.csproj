@@ -8,13 +8,17 @@
 
   <ItemGroup>
     <PackageReference Include="MediatR" Version="12.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Core" Version="1.1.0" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Commands\" />
-    <Folder Include="Hubs\" />
     <Folder Include="Dtos\" />
     <Folder Include="Queries\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FlightsConsumer.Domain\FlightsConsumer.Domain.csproj" />
   </ItemGroup>
 
 </Project>

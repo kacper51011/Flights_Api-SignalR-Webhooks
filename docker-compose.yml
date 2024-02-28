@@ -29,7 +29,7 @@ services:
     ports:
      - 27017:27017
     volumes:
-    - local:/data/db
+    - local:/data/db2
 
   mongo-express:
     image: mongo-express
@@ -42,7 +42,7 @@ services:
       ME_CONFIG_MONGODB_ADMINPASSWORD: example
       ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
     volumes:
-      - local:/data/db
+      - local:/data/db2
 
 
 
