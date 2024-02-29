@@ -18,20 +18,22 @@ export const ItemLetter = ({ letter, isLastInSentence }: props) => {
     if (previousLetter != null && isVisible == true) {
       setIsVisible(false);
       setTimeout(() => {
-        setPreviousLetter(letter);
         setIsVisible(true);
-      }, 3000);
+        setPreviousLetter(letter);
+      }, 1200);
     }
   }, [letter]);
 
   const addedMargin: string = isLastInSentence ? "mr-2" : "";
+  const animation = isVisible ? "animate-trans-down" : "animate-trans-up";
   return (
     <div
       className={
-        "text-center text-xl font-semibold text-yellow-500 border-white bg-gray-800 leading-8 h-8 w-8 " + addedMargin
+        "text-center text-xl font-semibold text-yellow-500 border-white bg-gray-800 leading-8 h-8 w-8 overflow-hidden " +
+        addedMargin
       }
     >
-      <span className="">{previousLetter?.toUpperCase()}</span>
+      <div className={animation}>{previousLetter?.toUpperCase()}</div>
     </div>
   );
 };

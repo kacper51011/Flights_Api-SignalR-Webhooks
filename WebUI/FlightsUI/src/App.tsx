@@ -4,6 +4,16 @@ import { HubConnectionBuilder } from "@microsoft/signalr";
 import { ItemLetter } from "./Components/ItemLetter";
 
 function App() {
+  // const [connection, setConnection] = useState(null);
+
+  // const connectToServer = async () => {
+  //   try {
+  //     const conn = new HubConnectionBuilder().withUrl("https://localhost:8005").build();
+
+  //     conn.on("InitializedConnection", (flights: string) => {});
+  //   } catch (error) {}
+  // };
+
   const [letter, setLetter] = useState("A");
 
   return (
