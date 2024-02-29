@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { ItemLetter } from "./ItemLetter";
 
+// type props = {
+//   flightItemId: string;
+//   letters: string[];
+// };
+
 export const FlightItem = () => {
   const initialList: string[] = Array.from({ length: 36 }, () => "");
 

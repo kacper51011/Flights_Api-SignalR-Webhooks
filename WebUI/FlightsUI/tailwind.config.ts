@@ -6,8 +6,8 @@ export default {
     extend: {
       width: {
         location: "368px",
-        time: "158px",
-        status: "208px",
+        time: "154px",
+        status: "216px",
         delay: "78px",
       },
     },
