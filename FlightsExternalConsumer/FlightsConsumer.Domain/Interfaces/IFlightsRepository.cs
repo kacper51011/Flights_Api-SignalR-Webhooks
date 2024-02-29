@@ -14,5 +14,7 @@ namespace FlightsConsumer.Domain.Interfaces
 
         public Task CreateOrUpdateFlight(Flight entity);
         public Task DeleteFlight(string id);
+
+        public Task<List<Flight>> GetTenLastFlightsFromToday();
     }
 }

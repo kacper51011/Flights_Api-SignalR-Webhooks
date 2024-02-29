@@ -7,10 +7,6 @@ namespace FlightsConsumer.Api.Controllers
     [ApiController]
     public class NotificationsController : ControllerBase
     {
-        [HttpPost]
-        public async Task<ActionResult> Notify()
-        {
-
-        }
+        
     }
 }
