@@ -1,22 +1,28 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ItemLetter } from "./ItemLetter";
 
-// type props = {
-//   flightItemId: string;
-//   letters: string[];
-// };
+type props = {
+  letters?: string;
+};
 
-export const FlightItem = () => {
-  const initialList: string[] = Array.from({ length: 36 }, () => "");
+export const FlightItem = ({ letters }: props) => {
+  useEffect(() => {
+    if (letters) {
+      const lettersArray = letters!.split("");
+      if (lettersArray.length == displayedLetters.length) {
+        setLetters(lettersArray);
+      }
+    }
+  }, [letters]);
 
-  const [Letters, SetLetters] = useState(initialList);
+  const [displayedLetters, setLetters] = useState("Warsaw    Warsaw    14261528start 14".split(""));
   return (
     <li className="flex py-2 gap-1">
-      {Letters.map((x, index) => {
+      {displayedLetters.map((x, index) => {
         if ([9, 19, 23, 27, 33].includes(index)) {
-          return <ItemLetter letter="u" isLastInSentence />;
+          return <ItemLetter key={index} letter={x} isLastInSentence />;
         } else {
-          return <ItemLetter letter="x" />;
+          return <ItemLetter key={index} letter={x} />;
         }
       })}
     </li>
