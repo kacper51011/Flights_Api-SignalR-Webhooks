@@ -49,6 +49,9 @@ services:
     build:
       context: .
       dockerfile: Flights/Flights.Api/Dockerfile
+    ports:
+    - 8000:8000
+    - 8004:8004
 
 
 
@@ -57,4 +60,6 @@ services:
     build:
       context: .
       dockerfile: FlightsExternalConsumer/FlightsConsumer.Api/Dockerfile
-
+    ports:
+    - 8001:8001
+    - 8005:8005

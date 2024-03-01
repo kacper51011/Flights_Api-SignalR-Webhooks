@@ -49,17 +49,17 @@ namespace FlightsConsumer.Domain.Entities
 
         }
 
-        public void Update(DateTime startTime, DateTime endTime, TimeSpan duration, TimeSpan delay, string from, string to, bool flightStarted, bool flightCompleted, DateTime updatedInPublisherAt)
+        public void Update(Flight flight)
         {
-            StartTime = startTime;
-            EndTime = endTime;
-            Duration = duration;
-            Delay = delay;
-            From = from;
-            To = to;
-            FlightStarted = flightStarted;
-            FlightCompleted = flightCompleted;
-            UpdatedInPublisherAt = updatedInPublisherAt;
+            StartTime = flight.StartTime;
+            EndTime = flight.EndTime;
+            Duration = flight.Duration;
+            Delay = flight.Delay;
+            From = flight.From;
+            To = flight.To;
+            FlightStarted = flight.FlightStarted;
+            FlightCompleted = flight.FlightCompleted;
+            UpdatedInPublisherAt = flight.UpdatedInPublisherAt;
             IncrementVersion();
         }
     }
