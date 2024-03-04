@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FlightsConsumer.Application.Consumers.FlightUpdatedConsumers
+namespace FlightsConsumer.Application.Messages
 {
-    public class FlightUpdatedSignalRConsumer
+    public record FlightDeleted
     {
+        public string FlightId { get; set; }
     }
 }
