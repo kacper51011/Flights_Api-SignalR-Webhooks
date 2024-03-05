@@ -62,4 +62,12 @@ services:
       dockerfile: FlightsExternalConsumer/FlightsConsumer.Api/Dockerfile
     ports:
     - 8001:8001
-    - 8005:8005
+    - 8005:8005 
+
+  # flightsui:
+  #   image: ${DOCKER_REGISTRY-}flightsui
+  #   build:
+  #     context: .
+  #     dockerfile: WebUI/FlightsUI/Dockerfile
+  #   ports:
+  #   - 8080:8080

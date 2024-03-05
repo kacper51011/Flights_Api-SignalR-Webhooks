@@ -16,7 +16,7 @@ namespace Flights.Infrastructure.Configurations
             builder.HasKey(w => w.Id);
 
             builder.HasData(
-                new WebhookSubscription("localhost:8003/api/notification")
+                new WebhookSubscription("localhost:8003/api/notifications")
                 );
         }
     }

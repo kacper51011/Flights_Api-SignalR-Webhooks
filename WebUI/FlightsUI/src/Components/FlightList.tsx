@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { FlightItem } from "./FlightItem";
-import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
+import { HttpTransportType, HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 
 type Flight = {
   flightId: string;
@@ -14,7 +14,10 @@ export const FlightList = () => {
 
   useEffect(() => {
     const conn = new HubConnectionBuilder()
-      .withUrl("https://localhost:8001/flightshub")
+      .withUrl("https://localhost:8001/flightshub", {
+        skipNegotiation: true,
+        transport: HttpTransportType.WebSockets,
+      })
       .withAutomaticReconnect()
       .build();
 
@@ -23,9 +26,14 @@ export const FlightList = () => {
 
   useEffect(() => {
     if (connection) {
-      connection.start().then(() => {
-        console.log("connected to hub");
-      });
+      connection
+        .start()
+        .then(() => {
+          console.log("connected to hub");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
 
       connection.on("Initialize", (flightList: Flight[]) => {
         setFlights(flightList);

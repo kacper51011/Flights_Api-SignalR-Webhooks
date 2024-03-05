@@ -53,7 +53,7 @@ namespace FlightsConsumer.Api.Controllers
 
                 var formattedDelay = flight.Delay.TotalMinutes;
 
-                flightDto.formatedValue = new string(fromStringArray) + new string(toStringArray) + formattedStart + formattedEnd + currentSituation + formattedDelay;
+                flightDto.FormatedValue = new string(fromStringArray) + new string(toStringArray) + formattedStart + formattedEnd + currentSituation + formattedDelay;
 
                 flightsDtos.Add(flightDto);
             }
