@@ -1,5 +1,7 @@
-﻿using FlightsConsumer.Application.Dtos;
+﻿using FlightsConsumer.Application.Commands;
+using FlightsConsumer.Application.Dtos;
 using FlightsConsumer.Domain.Interfaces;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,15 +12,40 @@ namespace FlightsConsumer.Api.Controllers
     public class NotificationsController : ControllerBase
     {
         private readonly IFlightsRepository _flightsRepository;
+        private readonly IMediator _mediator;
 
-        public NotificationsController(IFlightsRepository flightsRepository)
+        public NotificationsController(IFlightsRepository flightsRepository, IMediator mediator)
         {
             _flightsRepository = flightsRepository;
+            _mediator = mediator;
+        }
+
+        [HttpPost]
+
+        public async Task<ActionResult> Notify(IncomingWebhookDto incomingWebhookDto)
+        {
+            try
+            {
+                var command = new CreateOrUpdateFlightCommand(incomingWebhookDto);
+
+                await _mediator.Send(command);
+
+                return Created();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+
+
+            
         }
 
         [HttpGet]
         [Route("Test")]
-        public async Task<ActionResult<List<FlightSignalRDto>>> testController()
+        public async Task<ActionResult<List<FlightSignalRDto>>> TestMethod()
         {
             var flights = await _flightsRepository.GetTenLastFlightsFromToday();
             var flightsDtos = new List<FlightSignalRDto>();
