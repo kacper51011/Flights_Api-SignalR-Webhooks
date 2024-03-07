@@ -13,10 +13,13 @@ namespace Flights.Application.Commands.CreateSubscription
     public class CreateSubscriptionCommandHandler : IRequestHandler<CreateSubscriptionCommand, string>
     {
         private readonly IWebhookSubscriptionsRepository _webhookSubscriptionsRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CreateSubscriptionCommandHandler(IWebhookSubscriptionsRepository webhookSubscriptionsRepository)
+        public CreateSubscriptionCommandHandler(IWebhookSubscriptionsRepository webhookSubscriptionsRepository, IUnitOfWork unitOfWork)
         {
             _webhookSubscriptionsRepository = webhookSubscriptionsRepository;
+            _unitOfWork = unitOfWork;
+
             
         }
         public async Task<string> Handle(CreateSubscriptionCommand request, CancellationToken cancellationToken)
@@ -31,6 +34,7 @@ namespace Flights.Application.Commands.CreateSubscription
 
                 WebhookSubscription subscription = new(request.createSubscriptionDto.WebhookUri);
                 await _webhookSubscriptionsRepository.AddSubscription(subscription);
+                await _unitOfWork.SaveChangesAsync();
 
                 return subscription.Secret;
             }

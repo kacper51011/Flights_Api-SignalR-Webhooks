@@ -26,7 +26,7 @@ namespace Flights.Infrastructure.Repositories
 
         public async Task<List<WebhookSubscription>> GetAllSubscriptions()
         {
-            var response = await _context.WebhookSubscriptions.DefaultIfEmpty(null).ToListAsync();
+            var response = await _context.WebhookSubscriptions.ToListAsync();
             return response;
         }
 
@@ -41,6 +41,11 @@ namespace Flights.Infrastructure.Repositories
             var response = await _context.WebhookSubscriptions.FirstOrDefaultAsync(x => x.WebhookUri == uri);
             return response;
 
+        }
+
+        public async Task DeleteAllSubscriptionsForTest()
+        {
+            await _context.WebhookSubscriptions.ExecuteDeleteAsync();
         }
     }
 }

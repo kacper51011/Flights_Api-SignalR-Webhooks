@@ -44,7 +44,7 @@ services:
 
 
 
-  flights.api:
+  flightsapi:
     image: ${DOCKER_REGISTRY-}flightsapi
     build:
       context: .
@@ -55,7 +55,7 @@ services:
 
 
 
-  flightsconsumer.api:
+  flightsconsumerapi:
     image: ${DOCKER_REGISTRY-}flightsconsumerapi
     build:
       context: .

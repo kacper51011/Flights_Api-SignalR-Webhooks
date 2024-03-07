@@ -143,7 +143,12 @@ builder.Services.AddSwaggerGen(cfg =>
     });
 });
 
-builder.Services.AddHttpClient();
+builder.Services.AddHttpClient("InsecureClient").ConfigurePrimaryHttpMessageHandler(() =>
+{
+    var handler = new HttpClientHandler();
+    handler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true;
+    return handler;
+});
 
 var app = builder.Build();
 

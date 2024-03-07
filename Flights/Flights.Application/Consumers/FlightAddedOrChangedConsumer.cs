@@ -58,9 +58,9 @@ namespace Flights.Application.Consumers
                 };
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                _logger.LogWarning(ex.ToString() );
                 _logger.LogWarning($"Something went wrong in FlightAddedConsumer with  FlightId: {context.Message.FlightId}");
             }
 
