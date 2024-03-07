@@ -17,11 +17,11 @@ namespace Flights.Infrastructure.Configurations
 
             builder.HasData
                 (
-                Flight.Create(DateTime.UtcNow.AddHours(2), DateTime.UtcNow.AddHours(4), "Warsaw", "Madrid"),
-                Flight.Create(DateTime.UtcNow.AddHours(1.5), DateTime.UtcNow.AddHours(2.5), "Warsaw", "Barcelona"),
-                Flight.Create(DateTime.UtcNow.AddHours(3), DateTime.UtcNow.AddHours(5), "Berlin", "Madrid"),
-                Flight.Create(DateTime.UtcNow.AddHours(2), DateTime.UtcNow.AddHours(2.5), "Cracov", "Gdansk"),
-                Flight.Create(DateTime.UtcNow.AddHours(2), DateTime.UtcNow.AddHours(5), "Warsaw", "Moscow")
+                Flight.CreateForSeed(DateTime.UtcNow.AddHours(2), DateTime.UtcNow.AddHours(4), "Warsaw", "Madrid"),
+                Flight.CreateForSeed(DateTime.UtcNow.AddHours(1.5), DateTime.UtcNow.AddHours(2.5), "Warsaw", "Barcelona"),
+                Flight.CreateForSeed(DateTime.UtcNow.AddHours(3), DateTime.UtcNow.AddHours(5), "Berlin", "Madrid"),
+                Flight.CreateForSeed(DateTime.UtcNow.AddHours(2), DateTime.UtcNow.AddHours(2.5), "Cracov", "Gdansk"),
+                Flight.CreateForSeed(DateTime.UtcNow.AddHours(2), DateTime.UtcNow.AddHours(5), "Warsaw", "Moscow")
                 );
 
         }
