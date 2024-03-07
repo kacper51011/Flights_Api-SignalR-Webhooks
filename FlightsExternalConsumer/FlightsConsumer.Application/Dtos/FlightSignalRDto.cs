@@ -1,15 +1,10 @@
 ﻿using FlightsConsumer.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FlightsConsumer.Application.Dtos
 {
     public class FlightSignalRDto
-    {     
-        public string Id {  get; set; }
+    {
+        public string Id { get; set; }
         public string FormatedValue { get; set; }
     }
 
@@ -21,32 +16,58 @@ namespace FlightsConsumer.Application.Dtos
             var flightDto = new FlightSignalRDto();
             flightDto.Id = flight.FlightId;
 
-            var fromStringArray = new Char[10];
-            var toStringArray = new Char[10];
+            // lets say the max string length of from and to is 10 so it will be a bit easier to map
 
-            for (int i = 0; i < fromStringArray.Length; i++) { fromStringArray[i] = flight.From[i]; }
-            for (int i = 0; i < toStringArray.Length; i++) { toStringArray[i] = flight.To[i]; }
+            //from string
 
-            var formattedStart = flight.StartTime.Minute.ToString() + flight.StartTime.Second.ToString();
-            var formattedEnd = flight.EndTime.Minute.ToString() + flight.EndTime.Second.ToString();
+            var fromStringArray = new List<string>();
+
+            fromStringArray.Add(flight.From);
+
+            var charsToTenFrom = 10 - flight.From.Length;
+
+            for (var i = 0; i < charsToTenFrom; i++)
+            {
+                fromStringArray.Add(" ");
+            }
+
+            //to string
+            var toStringArray = new List<string>();
+
+            toStringArray.Add(flight.To);
+
+            var charsToTenTo = 10 - flight.To.Length;
+
+            for (var i = 0; i < charsToTenTo; i++)
+            {
+                toStringArray.Add(" ");
+            }
+
+            //start and end formatted values
+
+            var formattedStart = flight.StartTime.Hour.ToString("00") + flight.StartTime.Minute.ToString("00");
+            var formattedEnd = flight.EndTime.Hour.ToString("00") + flight.EndTime.Minute.ToString("00");
 
             string currentSituation;
             if (flight.FlightCompleted)
             {
-                currentSituation = "Ended";
+                currentSituation = "Ended  ";
             }
             else if (flight.FlightStarted)
             {
-                currentSituation = "Started";
+                currentSituation = "Flying ";
             }
             else
             {
-                currentSituation = "Wait";
+                currentSituation = "Wait   ";
             }
 
-            var formattedDelay = flight.Delay.TotalMinutes;
 
-            flightDto.FormatedValue = new string(fromStringArray) + new string(toStringArray) + formattedStart + formattedEnd + currentSituation + formattedDelay;
+
+            string formattedDelay = flight.Delay.TotalMinutes.ToString("00");
+
+
+            flightDto.FormatedValue = string.Join("", string.Join("", fromStringArray), string.Join("", toStringArray), formattedStart, formattedEnd, currentSituation, formattedDelay);
 
             return flightDto;
         }
