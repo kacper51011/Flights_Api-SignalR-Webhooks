@@ -1,4 +1,5 @@
-﻿using Flights.Domain.Validations;
+﻿using Flights.Domain.Exceptions;
+using Flights.Domain.Validations;
 
 namespace Flights.Domain.Entities
 {
@@ -17,6 +18,30 @@ namespace Flights.Domain.Entities
             FlightStarted = false;
             FlightCompleted = false;
             IsSendToQueue = false;
+
+
+
+        }
+
+        private Flight(DateTime startTime, DateTime endTime, string from, string to, bool isForSeed)
+        {
+            if(isForSeed == true)
+            {
+                FlightId = Guid.NewGuid().ToString();
+                StartTime = startTime;
+                EndTime = endTime;
+                From = from;
+                To = to;
+                Duration = endTime - startTime;
+                Delay = TimeSpan.Zero;
+                FlightStarted = false;
+                FlightCompleted = false;
+                IsSendToQueue = false;
+            }
+            else
+            {
+                throw new DomainException("Creating object without validation is possible only for seeding");
+            }
 
 
 
@@ -59,6 +84,15 @@ namespace Flights.Domain.Entities
         {
 
             var flight = new Flight(startTime, endTime, from, to);
+            flight.InitializeRoot();
+
+            return flight;
+        }
+
+        public static Flight CreateForSeed(DateTime startTime, DateTime endTime, string from, string to)
+        {
+
+            var flight = new Flight(startTime, endTime, from, to, true);
             flight.InitializeRoot();
 
             return flight;
@@ -108,6 +142,11 @@ namespace Flights.Domain.Entities
             IncrementVersion();
             IsSendToQueue = false;
 
+        }
+
+        public void SetSentToQueue()
+        {
+            IsSendToQueue = true;
         }
     }
 

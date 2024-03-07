@@ -1,11 +1,6 @@
 ﻿using Flights.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Flights.Infrastructure.Configurations
 {
@@ -16,7 +11,12 @@ namespace Flights.Infrastructure.Configurations
             builder.HasKey(w => w.Id);
 
             builder.HasData(
-                new WebhookSubscription("localhost:8003/api/notification")
+                new WebhookSubscription("http://flightsconsumerapi:8005/api/Notifications")
+                {
+                    Secret = "MyRandomSecret",
+                    Id = "RandomlyGeneratedId",
+                    WebhookUri = "http://flightsconsumerapi:8005/api/Notifications"
+                }
                 );
         }
     }

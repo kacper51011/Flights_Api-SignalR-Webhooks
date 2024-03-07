@@ -28,8 +28,7 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: example
     ports:
      - 27017:27017
-    volumes:
-    - local:/data/db2
+
 
   mongo-express:
     image: mongo-express
@@ -41,22 +40,34 @@ services:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: example
       ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
-    volumes:
-      - local:/data/db2
 
 
 
-  flights.api:
+
+  flightsapi:
     image: ${DOCKER_REGISTRY-}flightsapi
     build:
       context: .
       dockerfile: Flights/Flights.Api/Dockerfile
+    ports:
+    - 8000:8000
+    - 8004:8004
 
 
 
-  flightsconsumer.api:
+  flightsconsumerapi:
     image: ${DOCKER_REGISTRY-}flightsconsumerapi
     build:
       context: .
       dockerfile: FlightsExternalConsumer/FlightsConsumer.Api/Dockerfile
+    ports:
+    - 8001:8001
+    - 8005:8005 
 
+  # flightsui:
+  #   image: ${DOCKER_REGISTRY-}flightsui
+  #   build:
+  #     context: .
+  #     dockerfile: WebUI/FlightsUI/Dockerfile
+  #   ports:
+  #   - 8080:8080

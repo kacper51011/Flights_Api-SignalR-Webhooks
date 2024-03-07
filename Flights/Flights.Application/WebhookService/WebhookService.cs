@@ -14,7 +14,7 @@ namespace Flights.Application.WebhookService
     public class WebhookService : IWebhookService
     {
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly HttpClient _httpClient;
+        //private readonly HttpClient _httpClient;
         private readonly ILogger<WebhookService> _logger;
 
         // Im actually not sure about the way of handling the httpclient connection in this service, the main reason is
@@ -25,28 +25,34 @@ namespace Flights.Application.WebhookService
             _logger = logger;
 
             _httpClientFactory = httpClientFactory;
-            _httpClient = _httpClientFactory.CreateClient();
-            _httpClient.Timeout = new TimeSpan(0, 0, 30);
+
+            //_httpClient = _httpClientFactory.CreateClient();
+            //_httpClient.Timeout = new TimeSpan(0, 0, 30);
 
         }
         public async Task NotifyAsync(string url, WebhookSendDataDto dto)
         {
             try
             {
+                //var clientHandler = new HttpClientHandler();
+                //clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true;
+                var httpClient = _httpClientFactory.CreateClient("InsecureClient");
+                Uri uri = new Uri(url);
                 var serializedObject = JsonSerializer.Serialize(dto, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase});
 
-                var request = new HttpRequestMessage(HttpMethod.Post, url);
+                var request = new HttpRequestMessage(HttpMethod.Post, uri);
+                
 
                 request.Content =  new StringContent(serializedObject);
                 request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
-                await _httpClient.SendAsync(request);
+                await httpClient.SendAsync(request);
 
                 return;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                _logger.LogWarning(ex.Message.ToString());
                 _logger.LogWarning($"Something went wrong in WebhookService for subscribtion with url {url}");
                 return;
             }

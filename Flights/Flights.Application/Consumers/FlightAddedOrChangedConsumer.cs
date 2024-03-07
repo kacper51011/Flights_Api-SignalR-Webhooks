@@ -12,14 +12,16 @@ namespace Flights.Application.Consumers
         private readonly IWebhookService _webhookService;
         private readonly IFlightsRepository _flightRepository;
         private readonly IWebhookSubscriptionsRepository _webhookSubscriptionsRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<FlightAddedOrChangedConsumer> _logger;
 
-        public FlightAddedOrChangedConsumer(ILogger<FlightAddedOrChangedConsumer> logger, IWebhookService webhookService, IFlightsRepository flightRepository, IWebhookSubscriptionsRepository webhookSubscriptionsRepository)
+        public FlightAddedOrChangedConsumer(ILogger<FlightAddedOrChangedConsumer> logger, IWebhookService webhookService, IFlightsRepository flightRepository, IWebhookSubscriptionsRepository webhookSubscriptionsRepository, IUnitOfWork unitOfWork)
         {
             _webhookService = webhookService;
             _flightRepository = flightRepository;
             _webhookSubscriptionsRepository = webhookSubscriptionsRepository;
             _logger = logger;
+            _unitOfWork = unitOfWork;
 
         }
         public async Task Consume(ConsumeContext<FlightAddedOrChanged> context)
@@ -57,10 +59,13 @@ namespace Flights.Application.Consumers
                     _logger.LogInformation($"Webhook sent to: {subscriber.WebhookUri}");
                 };
 
-            }
-            catch (Exception)
-            {
+                flight.SetSentToQueue();
+                await _unitOfWork.SaveChangesAsync();
+                
 
+            }
+            catch (Exception ex)
+            {
                 _logger.LogWarning($"Something went wrong in FlightAddedConsumer with  FlightId: {context.Message.FlightId}");
             }
 

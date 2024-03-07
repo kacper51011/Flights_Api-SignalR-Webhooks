@@ -48,5 +48,13 @@ namespace FlightsConsumer.Infrastructure.Repositories
             var response = await _flightsCollection.Find(x => x.FlightId == id).FirstOrDefaultAsync();
             return response;
         }
+
+        public async Task<List<Flight>> GetTenLastFlightsFromToday()
+        {
+            var builder = Builders<Flight>.Filter;
+
+            var response = await _flightsCollection.Find(x => x.StartTime.Date == DateTime.Today.ToUniversalTime()).SortBy(x => x.StartTime).Limit(10).ToListAsync();
+            return response;
+        }
     }
 }

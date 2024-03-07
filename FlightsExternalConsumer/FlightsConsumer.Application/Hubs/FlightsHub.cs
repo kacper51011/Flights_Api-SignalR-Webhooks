@@ -1,4 +1,5 @@
-﻿using FlightsConsumer.Domain.Interfaces;
+﻿using FlightsConsumer.Application.Dtos;
+using FlightsConsumer.Domain.Interfaces;
 using Microsoft.AspNetCore.SignalR;
 
 namespace FlightsConsumer.Application.Hubs
@@ -15,9 +16,25 @@ namespace FlightsConsumer.Application.Hubs
 
         public override async Task OnConnectedAsync()
         {
-            await Clients.All.SendAsync("ReceiveMessage", $"{Context.ConnectionId} has joined");
+            var flights = await _flightsRepository.GetTenLastFlightsFromToday();
+            var flightsDtos = new List<FlightSignalRDto>();
 
+            foreach (var flight in flights)
+            {
+                // created through extension method because its a bit complex mapping
+                var flightDto = flight.ToSignalRDto();
+                
+                flightsDtos.Add(flightDto);
+            }
+                await Clients.All.SendAsync("Initialize", flightsDtos);
         }
 
     }
-}
+
+
+
+
+    }
+
+
+
