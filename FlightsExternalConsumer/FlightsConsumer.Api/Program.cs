@@ -1,23 +1,29 @@
+using FlightsConsumer.Application.Commands;
 using FlightsConsumer.Application.Hubs;
+using FlightsConsumer.Application.Secrets;
+using FlightsConsumer.Domain.Interfaces;
+using FlightsConsumer.Infrastructure.Db;
+using FlightsConsumer.Infrastructure.Repositories;
 using MassTransit;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+builder.Services.Configure<MongoSettings>(builder.Configuration.GetSection("MongoDB"));
+builder.Services.Configure<SecretKeys>(builder.Configuration.GetSection("SecretKeys"));
+
+builder.Services.AddSingleton<IFlightsRepository, FlightsRepository>();
 builder.Services.AddSignalR();
+
+builder.Services.AddMediatR((m) => m.RegisterServicesFromAssemblyContaining(typeof(CreateOrUpdateFlightCommand)));
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddCors(c =>
-{
-    c.AddPolicy("reactapp", builder =>
-    {
-        builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
-    });
-});
+
 
 builder.Services.AddMassTransit(cfg =>
 {
@@ -43,6 +49,14 @@ builder.Services.AddMassTransit(cfg =>
     });
 
 
+});
+
+builder.Services.AddCors(c =>
+{
+    c.AddPolicy("reactapp", builder =>
+    {
+        builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+    });
 });
 
 var app = builder.Build();

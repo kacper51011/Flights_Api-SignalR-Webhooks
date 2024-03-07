@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FlightsConsumer.Application\FlightsConsumer.Application.csproj" />
+    <ProjectReference Include="..\FlightsConsumer.Infrastructure\FlightsConsumer.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

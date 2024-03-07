@@ -1,21 +1,25 @@
-﻿using FlightsConsumer.Domain.Entities;
+﻿using FlightsConsumer.Application.Secrets;
+using FlightsConsumer.Domain.Entities;
 using FlightsConsumer.Domain.Interfaces;
 using MediatR;
+using Microsoft.Extensions.Options;
 
 namespace FlightsConsumer.Application.Commands
 {
     public class CreateOrUpdateFlightCommandHandler : IRequestHandler<CreateOrUpdateFlightCommand>
     {
         private readonly IFlightsRepository _flightRepository;
-        public CreateOrUpdateFlightCommandHandler(IFlightsRepository flightRepository)
+        private readonly string _webhookKey;
+        public CreateOrUpdateFlightCommandHandler(IFlightsRepository flightRepository, IOptions<SecretKeys> secretKeys)
         {
             _flightRepository = flightRepository;
+            _webhookKey = secretKeys.Value.WebhookKey;
 
         }
         public async Task Handle(CreateOrUpdateFlightCommand request, CancellationToken cancellationToken)
         {
             // check if secret is correct to prevent unauthorized senders
-            if (request.dto.Secret != "actuallyRandomplaceholdervalue")
+            if (request.dto.Secret != _webhookKey)
             {
                 throw new UnauthorizedAccessException("wrong secret key");
             }

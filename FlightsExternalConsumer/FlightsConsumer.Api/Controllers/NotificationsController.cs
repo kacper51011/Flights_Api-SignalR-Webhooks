@@ -13,7 +13,6 @@ namespace FlightsConsumer.Api.Controllers
     {
         private readonly IFlightsRepository _flightsRepository;
         private readonly IMediator _mediator;
-        private readonly ILogger<NotificationsController> _logger;
 
         public NotificationsController(IFlightsRepository flightsRepository, IMediator mediator)
         {
@@ -27,7 +26,6 @@ namespace FlightsConsumer.Api.Controllers
         {
             try
             {
-                _logger.LogInformation("notify endpoint hit");
                 var command = new CreateOrUpdateFlightCommand(incomingWebhookDto);
 
                 await _mediator.Send(command);
