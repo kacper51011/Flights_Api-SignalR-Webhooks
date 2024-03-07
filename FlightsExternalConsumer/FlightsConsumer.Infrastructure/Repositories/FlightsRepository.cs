@@ -53,7 +53,7 @@ namespace FlightsConsumer.Infrastructure.Repositories
         {
             var builder = Builders<Flight>.Filter;
 
-            var response = await _flightsCollection.Find(x => x.StartTime == DateTime.Today.ToUniversalTime()).SortBy(x => x.StartTime).Limit(10).ToListAsync();
+            var response = await _flightsCollection.Find(x => x.StartTime.Date == DateTime.Today.ToUniversalTime()).SortBy(x => x.StartTime).Limit(10).ToListAsync();
             return response;
         }
     }
