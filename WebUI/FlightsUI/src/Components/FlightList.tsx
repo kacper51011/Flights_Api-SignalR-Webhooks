@@ -8,7 +8,6 @@ type Flight = {
 };
 
 export const FlightList = () => {
-  const [placeholder, setPlaceholder] = useState("Warsaw    Warsaw    14261528start 14");
   const [connection, setConnection] = useState<HubConnection | null>(null);
   const [flights, setFlights] = useState<Flight[]>([]);
 
@@ -69,22 +68,10 @@ export const FlightList = () => {
         <label className="w-delay">Delay</label>
       </ul>
       <ul>
-        <FlightItem letters={placeholder} />
+        {flights.map((f) => (
+          <FlightItem key={f.flightId} letters={f.letters} />
+        ))}
       </ul>
-      <button
-        onClick={() => {
-          setPlaceholder("Warsaf    Warsaw    14261528start 14");
-        }}
-      >
-        set1
-      </button>
-      <button
-        onClick={() => {
-          setPlaceholder("Barcelona Warsaw    14261528end   18");
-        }}
-      >
-        set2
-      </button>
     </main>
   );
 };
