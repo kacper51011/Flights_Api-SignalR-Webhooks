@@ -3,8 +3,8 @@ import { FlightItem } from "./FlightItem";
 import { HttpTransportType, HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 
 type Flight = {
-  flightId: string;
-  letters: string;
+  id: string;
+  formatedValue: string;
 };
 
 export const FlightList = () => {
@@ -35,17 +35,16 @@ export const FlightList = () => {
         });
 
       connection.on("Initialize", (flightList: Flight[]) => {
+        console.log(flightList);
         setFlights(flightList);
       });
 
       connection.on("ModifyFlight", (modifiedFlight: Flight) => {
-        setFlights((prevFlights) =>
-          prevFlights.map((x) => (x.flightId == modifiedFlight.flightId ? modifiedFlight : x))
-        );
+        setFlights((prevFlights) => prevFlights.map((x) => (x.id == modifiedFlight.id ? modifiedFlight : x)));
       });
 
       connection.on("DeleteFlight", (deletedFlightId: string) => {
-        setFlights((prevFlights) => prevFlights.filter((x) => x.flightId != deletedFlightId));
+        setFlights((prevFlights) => prevFlights.filter((x) => x.id != deletedFlightId));
       });
 
       connection.on("AddFlight", (flightToAdd: Flight) => {
@@ -69,7 +68,7 @@ export const FlightList = () => {
       </ul>
       <ul>
         {flights.map((f) => (
-          <FlightItem key={f.flightId} letters={f.letters} />
+          <FlightItem key={f.id} letters={f.formatedValue} />
         ))}
       </ul>
     </main>
