@@ -143,6 +143,11 @@ namespace Flights.Domain.Entities
             IsSendToQueue = false;
 
         }
+
+        public void SetSentToQueue()
+        {
+            IsSendToQueue = true;
+        }
     }
 
 
