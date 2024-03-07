@@ -2,7 +2,6 @@
 using FlightsConsumer.Application.Dtos;
 using FlightsConsumer.Domain.Interfaces;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FlightsConsumer.Api.Controllers
@@ -40,53 +39,33 @@ namespace FlightsConsumer.Api.Controllers
 
 
 
-            
+
         }
 
         [HttpGet]
-        [Route("Test")]
+        [Route("signalR/test/init")]
         public async Task<ActionResult<List<FlightSignalRDto>>> TestMethod()
         {
-            var flights = await _flightsRepository.GetTenLastFlightsFromToday();
-            var flightsDtos = new List<FlightSignalRDto>();
-
-            foreach (var flight in flights)
+            try
             {
-                var flightDto = new FlightSignalRDto();
-                flightDto.Id = flight.FlightId;
+                var flights = await _flightsRepository.GetTenLastFlightsFromToday();
+                var flightsDtos = new List<FlightSignalRDto>();
 
-                var fromStringArray = new Char[10];
-                var toStringArray = new Char[10];
-
-                for (int i = 0; i < fromStringArray.Length; i++) { fromStringArray[i] = flight.From[i]; }
-                for (int i = 0; i < toStringArray.Length; i++) { toStringArray[i] = flight.To[i]; }
-
-                var formattedStart = flight.StartTime.Minute.ToString() + flight.StartTime.Second.ToString();
-                var formattedEnd = flight.EndTime.Minute.ToString() + flight.EndTime.Second.ToString();
-
-                string currentSituation;
-                if (flight.FlightCompleted)
+                foreach (var flight in flights)
                 {
-                    currentSituation = "Ended";
+                    var flightSignalRDtoflight = flight.ToSignalRDto();
+                    flightsDtos.Add(flightSignalRDtoflight);
                 }
-                else if (flight.FlightStarted)
-                {
-                    currentSituation = "Started";
-                }
-                else
-                {
-                    currentSituation = "Wait";
-                }
-
-                var formattedDelay = flight.Delay.TotalMinutes;
-
-                flightDto.FormatedValue = new string(fromStringArray) + new string(toStringArray) + formattedStart + formattedEnd + currentSituation + formattedDelay;
-
-                flightsDtos.Add(flightDto);
+                return flightsDtos;
             }
-            return flightsDtos;
-       
-    }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+
+        }
 
     }
 }

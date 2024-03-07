@@ -1,5 +1,6 @@
 ﻿using Flights.Application.Commands.CreateSubscription;
 using Flights.Application.Dtos;
+using Flights.Application.Queries.GetAllSubscriptions;
 using Flights.Domain.Interfaces;
 using Flights.Domain.Models;
 using MediatR;
@@ -45,8 +46,9 @@ namespace Flights_Api_SignalR_Webhooks.Controllers
         {
             try
             {
-                var list = await _subRepository.GetAllSubscriptions();
-                return Ok(list);
+                var query = new GetAllSubscriptionsQuery();
+                var response = await _mediator.Send(query);
+                return Ok(response);
             }
             catch (Exception)
             {
@@ -56,7 +58,7 @@ namespace Flights_Api_SignalR_Webhooks.Controllers
         }
 
         [HttpDelete]
-        [Route("DeleteAllForTests")]
+        [Route("DeleteAll")]
         public async Task<ActionResult> DeleteAllForTest()
         {
             try
