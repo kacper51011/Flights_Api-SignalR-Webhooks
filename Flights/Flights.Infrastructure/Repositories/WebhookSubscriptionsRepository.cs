@@ -43,9 +43,21 @@ namespace Flights.Infrastructure.Repositories
 
         }
 
+        public async Task<WebhookSubscription> GetSubscriptionBySecret(string secret)
+        {
+            var response = await _context.WebhookSubscriptions.FirstOrDefaultAsync(x => x.Secret == secret);
+            return response;
+
+        }
+
         public async Task DeleteAllSubscriptionsForTest()
         {
             await _context.WebhookSubscriptions.ExecuteDeleteAsync();
+        }
+
+        public void DeleteSubscription(WebhookSubscription subscription)
+        {
+            _context.WebhookSubscriptions.Remove(subscription);
         }
     }
 }

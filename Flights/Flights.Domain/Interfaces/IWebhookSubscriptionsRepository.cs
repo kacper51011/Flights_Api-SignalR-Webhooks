@@ -11,8 +11,11 @@ namespace Flights.Domain.Interfaces
     {
         public Task<WebhookSubscription> GetSubscriptionById(string subscriptionId);
         public Task<WebhookSubscription> GetSubscriptionByUri(string uri);
+        public Task<WebhookSubscription> GetSubscriptionBySecret(string secret);
         public Task<List<WebhookSubscription>> GetAllSubscriptions();
         public Task AddSubscription(WebhookSubscription subscription);
         public Task DeleteAllSubscriptionsForTest();
+
+        public void DeleteSubscription(WebhookSubscription subscription);
     }
 }
