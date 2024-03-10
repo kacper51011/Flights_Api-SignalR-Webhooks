@@ -17,7 +17,7 @@ namespace Flights_Api_SignalR_Webhooks.Controllers
     {
         private readonly IMediator _mediator;
 
-        public SubscriptionsController(IMediator mediator, IWebhookSubscriptionsRepository subRepository)
+        public SubscriptionsController(IMediator mediator)
         {
             _mediator = mediator;
         }

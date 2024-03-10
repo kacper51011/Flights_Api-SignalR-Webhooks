@@ -31,10 +31,14 @@ namespace Flights_Api_SignalR_Webhooks.Controllers
                 var response = await _mediator.Send(request);
                 return Ok(response);
             }
+            catch (NotFoundException ex)
+            {
+                return StatusCode(404, ex.Message);
+            }
             catch (Exception)
             {
 
-                throw;
+                return StatusCode(500);
             }
         }
 
@@ -51,6 +55,11 @@ namespace Flights_Api_SignalR_Webhooks.Controllers
             catch (DomainException ex)
             {
                 return StatusCode(400, ex.Message);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500);
             }
 
         }
