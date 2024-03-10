@@ -36,7 +36,7 @@ builder.Services.AddQuartz(config =>
     var checkStartJobKey = new JobKey(nameof(CheckDidFlightStartJob));
 
     config
-    .AddJob<WebhookJob>(checkStartJobKey)
+    .AddJob<CheckDidFlightStartJob>(checkStartJobKey)
     .AddTrigger(trigger =>
         trigger.WithIdentity("CheckDidFlightStartJob").ForJob(checkStartJobKey)
         .WithSimpleSchedule(schedule => schedule.WithInterval(TimeSpan.FromMinutes(1)).RepeatForever())
@@ -46,7 +46,7 @@ builder.Services.AddQuartz(config =>
     var checkCompleteJobKey = new JobKey(nameof(CheckIsCompletedJob));
 
     config
-    .AddJob<WebhookJob>(checkCompleteJobKey)
+    .AddJob<CheckIsCompletedJob>(checkCompleteJobKey)
     .AddTrigger(trigger =>
         trigger.WithIdentity("CheckIsCompletedJob").ForJob(checkCompleteJobKey)
         .WithSimpleSchedule(schedule => schedule.WithInterval(TimeSpan.FromMinutes(2)).RepeatForever())
@@ -55,7 +55,7 @@ builder.Services.AddQuartz(config =>
     var RandomDelayJobKey = new JobKey(nameof(RandomDelayChangeJob));
 
     config
-    .AddJob<WebhookJob>(RandomDelayJobKey)
+    .AddJob<RandomDelayChangeJob>(RandomDelayJobKey)
     .AddTrigger(trigger =>
         trigger.WithIdentity("RandomDelayChangeJob").ForJob(RandomDelayJobKey)
         .WithSimpleSchedule(schedule => schedule.WithInterval(TimeSpan.FromMinutes(4)).RepeatForever())
@@ -64,7 +64,7 @@ builder.Services.AddQuartz(config =>
     var RandomAddFlightJobKey = new JobKey(nameof(RandomFlightAddJob));
 
     config
-    .AddJob<WebhookJob>(RandomAddFlightJobKey)
+    .AddJob<RandomFlightAddJob>(RandomAddFlightJobKey)
     .AddTrigger(trigger =>
         trigger.WithIdentity("RandomFlightAddJob").ForJob(RandomAddFlightJobKey)
         .WithSimpleSchedule(schedule => schedule.WithInterval(TimeSpan.FromMinutes(4)).RepeatForever())
@@ -77,6 +77,7 @@ builder.Services.AddQuartzHostedService(options =>
 {
     // when shutting down we want jobs to complete gracefully
     options.WaitForJobsToComplete = true;
+    options.AwaitApplicationStarted = true;
 });
 
 builder.Services.AddMassTransit(cfg =>

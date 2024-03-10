@@ -1,13 +1,16 @@
 ﻿using Flights.Domain.Entities;
 using Flights.Domain.Interfaces;
+using Microsoft.Extensions.Logging;
 using Quartz;
 
 namespace Flights.Application.BackgroundJobs
 {
+    [DisallowConcurrentExecution]
     public class RandomFlightAddJob : IJob
     {
         private readonly IFlightsRepository _flightsRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ILogger<RandomFlightAddJob> _logger;
         private readonly string[] cities = {
             "London",
             "Paris",
@@ -26,10 +29,11 @@ namespace Flights.Application.BackgroundJobs
             "Copenhagen"
         };
 
-        public RandomFlightAddJob(IFlightsRepository flightsRepository, IUnitOfWork unitOfWork)
+        public RandomFlightAddJob(IFlightsRepository flightsRepository, IUnitOfWork unitOfWork, ILogger<RandomFlightAddJob> logger)
         {
             _flightsRepository = flightsRepository;
             _unitOfWork = unitOfWork;
+            _logger = logger;
         }
 
 
@@ -37,6 +41,7 @@ namespace Flights.Application.BackgroundJobs
         {
             try
             {
+                _logger.LogInformation("started adding random flight");
                 var randomization = new Random();
 
                 // random from localization

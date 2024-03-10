@@ -1,22 +1,27 @@
 ﻿using Flights.Domain.Interfaces;
+using Microsoft.Extensions.Logging;
 using Quartz;
 
 namespace Flights.Application.BackgroundJobs
 {
+    [DisallowConcurrentExecution]
     public class RandomDelayChangeJob : IJob
     {
         private readonly IFlightsRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
-        public RandomDelayChangeJob(IFlightsRepository repository, IUnitOfWork unitOfWork)
+        private readonly ILogger<RandomDelayChangeJob> _logger;
+        public RandomDelayChangeJob(IFlightsRepository repository, IUnitOfWork unitOfWork, ILogger<RandomDelayChangeJob> logger)
         {
             _repository = repository;
             _unitOfWork = unitOfWork;
+            _logger = logger;
         }
 
         public async Task Execute(IJobExecutionContext context)
         {
             try
             {
+                _logger.LogInformation("started adding randomized delay of flights");
 
                 var flights = await _repository.GetNotCompletedFlights();
 

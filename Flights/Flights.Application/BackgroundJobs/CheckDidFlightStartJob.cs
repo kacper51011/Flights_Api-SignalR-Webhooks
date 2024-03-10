@@ -1,38 +1,47 @@
 ﻿using Flights.Domain.Interfaces;
+using Microsoft.Extensions.Logging;
 using Quartz;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Flights.Application.BackgroundJobs
 {
-    public class CheckDidFlightStartJob: IJob
+    [DisallowConcurrentExecution]
+    public class CheckDidFlightStartJob : IJob
     {
         private readonly IFlightsRepository _flightsRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ILogger<CheckDidFlightStartJob> _logger;
 
-        public CheckDidFlightStartJob(IFlightsRepository flightsRepository, IUnitOfWork unitOfWork)
+        public CheckDidFlightStartJob(IFlightsRepository flightsRepository, IUnitOfWork unitOfWork, ILogger<CheckDidFlightStartJob> logger)
         {
             _flightsRepository = flightsRepository;
             _unitOfWork = unitOfWork;
+            _logger = logger;
         }
 
         public async Task Execute(IJobExecutionContext context)
         {
-            var notStartedLatestFlights = await _flightsRepository.GetLatestNotStartedFlights();
-            var currentTime = DateTime.UtcNow;
-
-            foreach (var flight in notStartedLatestFlights)
+            try
             {
-                if (flight.StartTime < currentTime)
-                {
-                    flight.SetFlightStarted();
+                _logger.LogInformation("started checking start of flights");
+                var notStartedLatestFlights = await _flightsRepository.GetLatestNotStartedFlights();
+                var currentTime = DateTime.UtcNow;
 
+                foreach (var flight in notStartedLatestFlights)
+                {
+                    if (flight.StartTime < currentTime)
+                    {
+                        flight.SetFlightStarted();
+
+                    }
                 }
+                await _unitOfWork.SaveChangesAsync();
             }
-            await _unitOfWork.SaveChangesAsync();
+            catch (Exception)
+            {
+
+                throw;
+            }
+
         }
     }
 }
