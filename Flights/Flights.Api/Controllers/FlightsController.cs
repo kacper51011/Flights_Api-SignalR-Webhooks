@@ -2,7 +2,9 @@
 using Flights.Application.Commands.DecrementFlightDelay;
 using Flights.Application.Commands.IncrementFlightDelay;
 using Flights.Application.Dtos;
+using Flights.Application.Exceptions;
 using Flights.Application.Queries.GetFlightById;
+using Flights.Domain.Exceptions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -46,9 +48,9 @@ namespace Flights_Api_SignalR_Webhooks.Controllers
                 var response = await _mediator.Send(request);
                 return Ok(response);
             }
-            catch (Exception)
+            catch (DomainException ex)
             {
-                throw;
+                return StatusCode(400, ex.Message);
             }
 
         }
@@ -62,6 +64,14 @@ namespace Flights_Api_SignalR_Webhooks.Controllers
                 var request = new IncrementFlightDelayCommand(id, incrementDelayValue);
                 await _mediator.Send(request);
                 return Ok();
+            }
+            catch (DomainException ex)
+            {
+                return StatusCode(400, ex.Message);
+            }
+            catch (NotFoundException ex)
+            {
+                return StatusCode(404, ex.Message);
             }
             catch (Exception)
             {
@@ -80,6 +90,14 @@ namespace Flights_Api_SignalR_Webhooks.Controllers
                 var request = new DecrementFlightDelayCommand(id, decrementDelayValue);
                 await _mediator.Send(request);
                 return Ok();
+            }
+            catch (DomainException ex)
+            {
+                return StatusCode(400, ex.Message);
+            }
+            catch (NotFoundException ex)
+            {
+                return StatusCode(404, ex.Message);
             }
             catch (Exception)
             {

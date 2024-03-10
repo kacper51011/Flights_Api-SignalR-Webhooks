@@ -38,11 +38,14 @@ namespace Flights.Application.BackgroundJobs
                     {
 
                         flights[randomIndex].IncrementDelay(TimeSpan.FromMinutes(randomMinutes));
-                    } else
+                    } else if(randomAction == 3 && flights[randomIndex].Delay.TotalMinutes > randomMinutes)
                     {
                         
                         flights[randomIndex].DecrementDelay(TimeSpan.FromMinutes(randomMinutes));
 
+                    }else
+                    {
+                        return;
                     }
 
                     await _unitOfWork.SaveChangesAsync();
