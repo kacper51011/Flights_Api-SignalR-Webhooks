@@ -1,12 +1,6 @@
 ﻿using Flights.Domain.Entities;
 using Flights.Domain.Interfaces;
 using Quartz;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Flights.Application.BackgroundJobs
 {
@@ -41,33 +35,43 @@ namespace Flights.Application.BackgroundJobs
 
         public async Task Execute(IJobExecutionContext context)
         {
-            var randomization = new Random();
-
-            // random from localization
-            var fromLocationIndex = randomization.Next(0, cities.Length);
-
-            int toLocationIndex;
-            //ensuring that we won`t chose the same city second time
-            do
+            try
             {
-                toLocationIndex = randomization.Next(0, cities.Length);
-            } while (toLocationIndex == fromLocationIndex);
+                var randomization = new Random();
 
-            // random addDays for start
-            var randomDate = randomization.Next(0, 3);
+                // random from localization
+                var fromLocationIndex = randomization.Next(0, cities.Length);
 
-            var startDate = DateTime.UtcNow.AddDays(randomDate);
+                int toLocationIndex;
+                // random to localization
+                //ensuring that we won`t chose the same city second time
+                do
+                {
+                    toLocationIndex = randomization.Next(0, cities.Length);
+                } while (toLocationIndex == fromLocationIndex);
 
-            // random addHours for end
-            var randomDuration= randomization.Next(1, 12);
+                // random addDays for start
+                var randomDate = randomization.Next(0, 3);
 
-            var endDate = startDate.AddHours(randomDuration);
+                var startDate = DateTime.UtcNow.AddDays(randomDate);
+
+                // random addHours for end
+                var randomDuration = randomization.Next(1, 12);
+
+                var endDate = startDate.AddHours(randomDuration);
 
 
-            var createdFlight = Flight.Create(startDate, endDate, cities[fromLocationIndex], cities[toLocationIndex] );
+                var createdFlight = Flight.Create(startDate, endDate, cities[fromLocationIndex], cities[toLocationIndex]);
 
-            await _flightsRepository.AddFlight(createdFlight);
-            await _unitOfWork.SaveChangesAsync();
+                await _flightsRepository.AddFlight(createdFlight);
+                await _unitOfWork.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
         }
     }
 }

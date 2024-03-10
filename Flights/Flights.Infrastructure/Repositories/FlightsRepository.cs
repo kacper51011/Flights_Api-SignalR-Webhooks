@@ -53,6 +53,13 @@ namespace Flights.Infrastructure.Repositories
             return response;
         }
 
+        public async Task<List<Flight>> GetLatestNotStartedFlights()
+        {
+            var response = await _context.Flights.Where(x => x.FlightStarted == false).OrderBy(x => x.StartTime).Take(5).ToListAsync();
+            return response;
+        }
+
+
         public async Task<List<Flight>> GetNotCompletedFlights()
         {
             var response = await _context.Flights.Where(x => x.FlightCompleted == false).ToListAsync();
