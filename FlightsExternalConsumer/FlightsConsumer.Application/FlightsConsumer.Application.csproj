@@ -10,10 +10,7 @@
     <PackageReference Include="MassTransit" Version="8.1.3" />
     <PackageReference Include="MediatR" Version="12.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Core" Version="1.1.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Queries\" />
+    <PackageReference Include="Quartz" Version="3.8.1" />
   </ItemGroup>
 
   <ItemGroup>
