@@ -30,14 +30,14 @@ namespace Flights.Infrastructure.Repositories
 
         public async Task<List<Flight>> GetAllFlights()
         {
-            var response = await _context.Flights.DefaultIfEmpty(null).ToListAsync();
+            var response = await _context.Flights.ToListAsync();
             return response;
 
         }
 
         public async Task<List<Flight>> GetCompletedFlights()
         {
-            var response = await _context.Flights.Where(x => x.FlightCompleted == true).DefaultIfEmpty().ToListAsync();
+            var response = await _context.Flights.Where(x => x.FlightCompleted == true).ToListAsync();
             return response;
         }
 
@@ -49,7 +49,13 @@ namespace Flights.Infrastructure.Repositories
 
         public async Task<List<Flight>> GetStartedFlights()
         {
-            var response = await _context.Flights.Where(x => x.FlightStarted == true).DefaultIfEmpty(null).ToListAsync();
+            var response = await _context.Flights.Where(x => x.FlightStarted == true && x.FlightCompleted == false).ToListAsync();
+            return response;
+        }
+
+        public async Task<List<Flight>> GetNotCompletedFlights()
+        {
+            var response = await _context.Flights.Where(x => x.FlightCompleted == false).ToListAsync();
             return response;
         }
         public async Task<List<Flight>> GetNotSendedFlights()

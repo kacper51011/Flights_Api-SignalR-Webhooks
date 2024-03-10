@@ -1,4 +1,5 @@
-﻿using Flights.Domain.Interfaces;
+﻿using Flights.Application.Exceptions;
+using Flights.Domain.Interfaces;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -26,7 +27,7 @@ namespace Flights.Application.Commands.IncrementFlightDelay
                 var flight = await _repository.GetFlightById(request.id);
                 if(flight == null)
                 {
-                    throw new FileNotFoundException();
+                    throw new NotFoundException("Couldn`t find flight with specified id");
                 }
                 flight.IncrementDelay(request.incrementDelayValue);
 

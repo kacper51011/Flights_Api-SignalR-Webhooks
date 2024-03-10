@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Flights.Application.BackgroundJobs
 {
-    internal class RandomFlightAddJob
+    public class RandomFlightAddJob
     {
     }
 }
