@@ -11,6 +11,7 @@ namespace FlightsConsumer.Domain.Interfaces
     {
         public Task<Flight> GetFlightById(string id);
         public Task<List<Flight>> GetAllFlights();
+        public Task<List<Flight>> GetCompletedFlights();
 
         public Task CreateOrUpdateFlight(Flight entity);
         public Task DeleteFlight(string id);

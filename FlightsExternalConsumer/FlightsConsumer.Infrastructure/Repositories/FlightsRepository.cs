@@ -56,5 +56,11 @@ namespace FlightsConsumer.Infrastructure.Repositories
             var response = await _flightsCollection.Find(x => x.StartTime.Date == DateTime.Today.ToUniversalTime()).SortBy(x => x.StartTime).Limit(10).ToListAsync();
             return response;
         }
+
+        public async Task<List<Flight>> GetCompletedFlights()
+        {
+            var response = await _flightsCollection.Find(x => x.FlightCompleted == true).ToListAsync();
+            return response;
+        }
     }
 }
