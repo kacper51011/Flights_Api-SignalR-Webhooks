@@ -1,5 +1,6 @@
 ﻿using Flights.Domain.Exceptions;
 using Flights.Domain.Validations;
+using System.Runtime.CompilerServices;
 
 namespace Flights.Domain.Entities
 {
@@ -7,7 +8,6 @@ namespace Flights.Domain.Entities
     {
         private Flight(DateTime startTime, DateTime endTime, string from, string to)
         {
-            this.ValidateCreation(startTime, endTime, from, to);
             FlightId = Guid.NewGuid().ToString();
             StartTime = startTime;
             EndTime = endTime;
@@ -50,7 +50,6 @@ namespace Flights.Domain.Entities
         private Flight(string id, DateTime startTime, DateTime endTime, string from, string to)
         {
 
-            this.ValidateCreation(startTime, endTime, from, to);
             FlightId = id;
             StartTime = startTime;
             EndTime = endTime;
@@ -82,8 +81,9 @@ namespace Flights.Domain.Entities
 
         public static Flight Create(DateTime startTime, DateTime endTime, string from, string to)
         {
-
+            ValidateCreation(startTime, endTime, from, to);
             var flight = new Flight(startTime, endTime, from, to);
+
             flight.InitializeRoot();
 
             return flight;
@@ -136,6 +136,7 @@ namespace Flights.Domain.Entities
             {
                 Delay = TimeSpan.Zero;
                 IncrementVersion();
+                IsSendToQueue = false;
                 return;
             }
             Delay -= delayDecrementedByValue;
@@ -144,6 +145,22 @@ namespace Flights.Domain.Entities
 
         }
 
+        public static void ValidateCreation(DateTime startTime, DateTime endTime, string from, string to)
+        {
+            if (endTime < startTime)
+            {
+                throw new DomainException("End of the flight must be later than start");
+            }
+
+            if (startTime.AddDays(3) < endTime)
+            {
+                throw new DomainException("Our plane can`t fly that long");
+            }
+            if (startTime < DateTime.UtcNow)
+            {
+                throw new DomainException("Can`t add Flight which already started");
+            }
+        }
         public void SetSentToQueue()
         {
             IsSendToQueue = true;

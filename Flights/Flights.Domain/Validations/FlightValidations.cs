@@ -5,23 +5,23 @@ namespace Flights.Domain.Validations
 {
     public static class FlightValidations
     {
-        public static void ValidateCreation(this Flight flight, DateTime startTime, DateTime endTime, string from, string to)
-        {
-            //Due to the limitations of Entity Framework Core, I had to give up validation in valuable objects
-            if (endTime < startTime)
-            {
-                throw new DomainException("End of the flight must be later than start");
-            }
+        //public static void ValidateCreation(this Flight flight, DateTime startTime, DateTime endTime, string from, string to)
+        //{
+        //    //Due to the limitations of Entity Framework Core, I had to give up validation in valuable objects
+        //    if (endTime < startTime)
+        //    {
+        //        throw new DomainException("End of the flight must be later than start");
+        //    }
 
-            if (startTime.AddDays(3) < endTime)
-            {
-                throw new DomainException("Our plane can`t fly that long");
-            }
-            if (startTime < DateTime.UtcNow)
-            {
-                throw new DomainException("Can`t add Flight which already started");
-            }
-        }
+        //    if (startTime.AddDays(3) < endTime)
+        //    {
+        //        throw new DomainException("Our plane can`t fly that long");
+        //    }
+        //    if (startTime < DateTime.UtcNow)
+        //    {
+        //        throw new DomainException("Can`t add Flight which already started");
+        //    }
+        //}
 
         public static void ValidateIncrementDelay(this Flight flight)
         {

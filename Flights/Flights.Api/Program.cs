@@ -22,35 +22,6 @@ builder.Services.AddTransient<IWebhookService, WebhookService>();
 
 builder.Services.AddMediatR((m) => m.RegisterServicesFromAssemblyContaining(typeof(CreateFlightCommand)));
 
-
-//builder.Services.AddQuartz(c =>
-//{
-//    //c.ScheduleJob<SendWebhooksJob>(trigger =>
-//    //{
-//    //    trigger.WithSimpleSchedule(x => x.WithIntervalInSeconds(30));
-//    //});
-
-//    c.ScheduleJob<TestJob>(trigger =>
-//    {
-//        trigger.WithSimpleSchedule(x => x.WithIntervalInSeconds(30));
-//    });
-//    //var SendWebhookJobKey = JobKey.Create(nameof(SendWebhooksJob));
-
-//    //c
-//    //.AddJob<SendWebhooksJob>(SendWebhookJobKey)
-//    //.AddTrigger(trigger =>
-//    //    trigger.WithIdentity("webhook trigger").ForJob(SendWebhookJobKey)
-//    //    .WithSimpleSchedule(schedule => schedule.WithInterval(TimeSpan.FromSeconds(30)).RepeatForever())
-//    //    );
-//});
-
-////builder.Services.AddQuartzHostedService(options =>
-////{
-////    // when shutting down we want jobs to complete gracefully
-////    options.WaitForJobsToComplete = true;
-////});
-///
-
 builder.Services.AddQuartz(config =>
 {
     var testJobKey = new JobKey(nameof(WebhookJob));
