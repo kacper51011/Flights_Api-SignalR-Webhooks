@@ -22,10 +22,11 @@ namespace Flights.Application.BackgroundJobs
         public async Task Execute(IJobExecutionContext context)
         {
             var notStartedLatestFlights = await _flightsRepository.GetLatestNotStartedFlights();
+            var currentTime = DateTime.UtcNow;
 
-            foreach(var flight in notStartedLatestFlights)
+            foreach (var flight in notStartedLatestFlights)
             {
-                if (flight.StartTime > DateTime.UtcNow)
+                if (flight.StartTime < currentTime)
                 {
                     flight.SetFlightStarted();
 
