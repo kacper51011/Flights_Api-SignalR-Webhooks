@@ -61,6 +61,43 @@ builder.Services.AddQuartz(config =>
         trigger.WithIdentity("webhook trigger").ForJob(testJobKey)
         .WithSimpleSchedule(schedule => schedule.WithInterval(TimeSpan.FromSeconds(30)).RepeatForever())
         );
+
+    var checkStartJobKey = new JobKey(nameof(CheckDidFlightStartJob));
+
+    config
+    .AddJob<WebhookJob>(checkStartJobKey)
+    .AddTrigger(trigger =>
+        trigger.WithIdentity("CheckDidFlightStartJob").ForJob(checkStartJobKey)
+        .WithSimpleSchedule(schedule => schedule.WithInterval(TimeSpan.FromMinutes(1)).RepeatForever())
+        );
+
+
+    var checkCompleteJobKey = new JobKey(nameof(CheckIsCompletedJob));
+
+    config
+    .AddJob<WebhookJob>(checkCompleteJobKey)
+    .AddTrigger(trigger =>
+        trigger.WithIdentity("CheckIsCompletedJob").ForJob(checkCompleteJobKey)
+        .WithSimpleSchedule(schedule => schedule.WithInterval(TimeSpan.FromMinutes(2)).RepeatForever())
+        );
+
+    var RandomDelayJobKey = new JobKey(nameof(RandomDelayChangeJob));
+
+    config
+    .AddJob<WebhookJob>(RandomDelayJobKey)
+    .AddTrigger(trigger =>
+        trigger.WithIdentity("RandomDelayChangeJob").ForJob(RandomDelayJobKey)
+        .WithSimpleSchedule(schedule => schedule.WithInterval(TimeSpan.FromMinutes(4)).RepeatForever())
+        );
+
+    var RandomAddFlightJobKey = new JobKey(nameof(RandomFlightAddJob));
+
+    config
+    .AddJob<WebhookJob>(RandomAddFlightJobKey)
+    .AddTrigger(trigger =>
+        trigger.WithIdentity("RandomFlightAddJob").ForJob(RandomAddFlightJobKey)
+        .WithSimpleSchedule(schedule => schedule.WithInterval(TimeSpan.FromMinutes(4)).RepeatForever())
+        );
 });
 
 
