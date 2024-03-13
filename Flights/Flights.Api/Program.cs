@@ -58,7 +58,7 @@ builder.Services.AddQuartz(config =>
     .AddJob<RandomDelayChangeJob>(RandomDelayJobKey)
     .AddTrigger(trigger =>
         trigger.WithIdentity("RandomDelayChangeJob").ForJob(RandomDelayJobKey)
-        .WithSimpleSchedule(schedule => schedule.WithInterval(TimeSpan.FromMinutes(4)).RepeatForever())
+        .WithSimpleSchedule(schedule => schedule.WithInterval(TimeSpan.FromMinutes(1)).RepeatForever())
         );
 
     var RandomAddFlightJobKey = new JobKey(nameof(RandomFlightAddJob));
@@ -67,7 +67,7 @@ builder.Services.AddQuartz(config =>
     .AddJob<RandomFlightAddJob>(RandomAddFlightJobKey)
     .AddTrigger(trigger =>
         trigger.WithIdentity("RandomFlightAddJob").ForJob(RandomAddFlightJobKey)
-        .WithSimpleSchedule(schedule => schedule.WithInterval(TimeSpan.FromMinutes(4)).RepeatForever())
+        .WithSimpleSchedule(schedule => schedule.WithInterval(TimeSpan.FromMinutes(1)).RepeatForever())
         );
 });
 

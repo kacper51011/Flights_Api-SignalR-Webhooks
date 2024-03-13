@@ -57,8 +57,9 @@ namespace Flights.Application.BackgroundJobs
 
                 // random addDays for start
                 var randomDate = randomization.Next(0, 3);
+                var randomStartHour = randomization.Next(1, 12);
+                var startDate = DateTime.UtcNow.AddDays(randomDate).AddHours(randomStartHour);
 
-                var startDate = DateTime.UtcNow.AddDays(randomDate);
 
                 // random addHours for end
                 var randomDuration = randomization.Next(1, 12);

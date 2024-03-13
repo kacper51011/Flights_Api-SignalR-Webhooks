@@ -1,10 +1,16 @@
 using FlightsConsumer.Application.Commands;
+using FlightsConsumer.Application.Consumers.FlightCreatedConsumers;
+using FlightsConsumer.Application.Consumers.FlightDeletedConsumers;
+using FlightsConsumer.Application.Consumers.FlightUpdatedConsumers;
 using FlightsConsumer.Application.Hubs;
+using FlightsConsumer.Application.Jobs;
+using FlightsConsumer.Application.Messages;
 using FlightsConsumer.Application.Secrets;
 using FlightsConsumer.Domain.Interfaces;
 using FlightsConsumer.Infrastructure.Db;
 using FlightsConsumer.Infrastructure.Repositories;
 using MassTransit;
+using Quartz;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,8 +29,24 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddQuartz(config =>
+{
+    var DeleteCompletedFlightJobKey = new JobKey(nameof(DeleteCompletedFlightsJob));
 
+    config
+    .AddJob<DeleteCompletedFlightsJob>(DeleteCompletedFlightJobKey)
+    .AddTrigger(trigger =>
+        trigger.WithIdentity("DeleteCompletedFlightsJob").ForJob(DeleteCompletedFlightJobKey)
+        .WithSimpleSchedule(schedule => schedule.WithInterval(TimeSpan.FromMinutes(5)).RepeatForever())
+        );
+});
 
+builder.Services.AddQuartzHostedService(options =>
+{
+    // when shutting down we want jobs to complete gracefully
+    options.WaitForJobsToComplete = true;
+    options.AwaitApplicationStarted = true;
+});
 builder.Services.AddMassTransit(cfg =>
 {
 
@@ -32,6 +54,14 @@ builder.Services.AddMassTransit(cfg =>
     cfg.SetDefaultEndpointNameFormatter();
 
     //add two consumers
+    cfg.AddConsumer<FlightCreatedDbConsumer>();
+    cfg.AddConsumer<FlightCreatedSignalRConsumer>();
+
+    cfg.AddConsumer<FlightDeletedDbConsumer>();
+    cfg.AddConsumer<FlightDeletedSignalRConsumer>();
+
+    cfg.AddConsumer<FlightUpdatedDbConsumer>();
+    cfg.AddConsumer<FlightUpdatedSignalRConsumer>();
 
 
 

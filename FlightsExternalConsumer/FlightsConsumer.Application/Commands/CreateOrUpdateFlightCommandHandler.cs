@@ -1,6 +1,8 @@
-﻿using FlightsConsumer.Application.Secrets;
+﻿using FlightsConsumer.Application.Messages;
+using FlightsConsumer.Application.Secrets;
 using FlightsConsumer.Domain.Entities;
 using FlightsConsumer.Domain.Interfaces;
+using MassTransit;
 using MediatR;
 using Microsoft.Extensions.Options;
 
@@ -8,11 +10,13 @@ namespace FlightsConsumer.Application.Commands
 {
     public class CreateOrUpdateFlightCommandHandler : IRequestHandler<CreateOrUpdateFlightCommand>
     {
-        private readonly IFlightsRepository _flightRepository;
+        private readonly IFlightsRepository _flightsRepository;
+        private readonly IPublishEndpoint _publishEndpoint;
         private readonly string _webhookKey;
-        public CreateOrUpdateFlightCommandHandler(IFlightsRepository flightRepository, IOptions<SecretKeys> secretKeys)
+        public CreateOrUpdateFlightCommandHandler(IPublishEndpoint publishEndpoint, IFlightsRepository flightsRepository ,IOptions<SecretKeys> secretKeys)
         {
-            _flightRepository = flightRepository;
+            _publishEndpoint = publishEndpoint;
+            _flightsRepository = flightsRepository;
             _webhookKey = secretKeys.Value.WebhookKey;
 
         }
@@ -24,12 +28,11 @@ namespace FlightsConsumer.Application.Commands
                 throw new UnauthorizedAccessException("wrong secret key");
             }
 
-            var createdFlight = Flight.Create(request.dto.FlightId, request.dto.StartTime, request.dto.EndTime, request.dto.Duration, request.dto.Delay, request.dto.From, request.dto.To, request.dto.FlightStarted, request.dto.FlightCompleted, request.dto.DateOfUpdate);
-
-            var existingFlight = await _flightRepository.GetFlightById(request.dto.FlightId);
+            var x = request.dto;
+            var existingFlight = await _flightsRepository.GetFlightById(request.dto.FlightId);
             if (existingFlight == null)
             {
-                await _flightRepository.CreateOrUpdateFlight(createdFlight);
+                await _publishEndpoint.Publish(new FlightCreated { FlightId = x.FlightId, DateOfUpdate = x.DateOfUpdate, Delay= x.Delay, Duration= x.Duration, EndTime = x.EndTime, FlightCompleted= x.FlightCompleted, FlightStarted= x.FlightStarted, From = x.From, StartTime= x.StartTime, To = x.To });
             }
             else
             {
@@ -40,8 +43,8 @@ namespace FlightsConsumer.Application.Commands
                 }
                 else
                 {
-                    existingFlight.Update(createdFlight);
-                    await _flightRepository.CreateOrUpdateFlight(existingFlight);
+                    await _publishEndpoint.Publish(new FlightUpdated { FlightId = x.FlightId, DateOfUpdate = x.DateOfUpdate, Delay = x.Delay, Duration = x.Duration, EndTime = x.EndTime, FlightCompleted = x.FlightCompleted, FlightStarted = x.FlightStarted, From = x.From, StartTime = x.StartTime, To = x.To });
+
                 }
             }
 
